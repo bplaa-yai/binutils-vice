@@ -147,7 +147,7 @@
 (define-ifield
   (name f-rD-CD)
   (comment "Destination GPR for format C insns")
-  (start 9)
+  (start 8)
   (length 3)
 )
 (define-ifield
@@ -764,8 +764,8 @@
 )
 (define-insn
   (name getbitsi)
-  (comment "getBits immideate: getBits(q) rD,N - get N bits from stream and put into rD q - byte swallowing")
-  (syntax "gtbitsi $bitswallow $rDCD $N")
+  (comment "getBits immediate: getBits(q) rD,N - get N bits from stream and put into rD q - byte swallowing")
+  (syntax "getbitsi $bitswallow $rDCD $N")
   (format (+ FMT_D OPD_GETBITSi bitswallow rDCD (f-M-D 0) N))
   (semantics (nop)) ; for now. Some day, when I get arround
 		    ;to defining bitstream this could be written

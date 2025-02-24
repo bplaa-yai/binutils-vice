@@ -594,7 +594,7 @@ bsp_cgen_insert_operand (cd, opindex, fields, buffer, pc)
       errmsg = insert_normal (cd, fields->f_rALT_C, 0, 0, 10, 4, 16, total_length, buffer);
       break;
     case BSP_OPERAND_RDCD :
-      errmsg = insert_normal (cd, fields->f_rD_CD, 0, 0, 9, 3, 16, total_length, buffer);
+      errmsg = insert_normal (cd, fields->f_rD_CD, 0, 0, 8, 3, 16, total_length, buffer);
       break;
     case BSP_OPERAND_RSC :
       errmsg = insert_normal (cd, fields->f_rS_C, 0, 0, 5, 3, 16, total_length, buffer);
@@ -672,7 +672,7 @@ bsp_cgen_extract_operand (cd, opindex, ex_info, insn_value, fields, pc)
       length = extract_normal (cd, ex_info, insn_value, 0, 0, 10, 4, 16, total_length, pc, & fields->f_rALT_C);
       break;
     case BSP_OPERAND_RDCD :
-      length = extract_normal (cd, ex_info, insn_value, 0, 0, 9, 3, 16, total_length, pc, & fields->f_rD_CD);
+      length = extract_normal (cd, ex_info, insn_value, 0, 0, 8, 3, 16, total_length, pc, & fields->f_rD_CD);
       break;
     case BSP_OPERAND_RSC :
       length = extract_normal (cd, ex_info, insn_value, 0, 0, 5, 3, 16, total_length, pc, & fields->f_rS_C);

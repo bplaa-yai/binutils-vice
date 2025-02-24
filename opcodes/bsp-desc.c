@@ -231,7 +231,7 @@ const CGEN_IFLD bsp_cgen_ifld_table[] =
   { BSP_F_IMM, "f-imm", 0, 16, 7, 8, { 0, { (1<<MACH_BASE) } }  },
   { BSP_F_RT, "f-rT", 0, 16, 2, 3, { 0, { (1<<MACH_BASE) } }  },
   { BSP_F_IGNORE_C, "f-ignore-C", 0, 16, 7, 5, { 0, { (1<<MACH_BASE) } }  },
-  { BSP_F_RD_CD, "f-rD-CD", 0, 16, 9, 3, { 0, { (1<<MACH_BASE) } }  },
+  { BSP_F_RD_CD, "f-rD-CD", 0, 16, 8, 3, { 0, { (1<<MACH_BASE) } }  },
   { BSP_F_RALT_C, "f-rALT-C", 0, 16, 10, 4, { 0, { (1<<MACH_BASE) } }  },
   { BSP_F_EXT_C, "f-ext-C", 0, 16, 9, 1, { 0, { (1<<MACH_BASE) } }  },
   { BSP_F_RS_C, "f-rS-C", 0, 16, 5, 3, { 0, { (1<<MACH_BASE) } }  },
@@ -287,7 +287,7 @@ const CGEN_OPERAND bsp_cgen_operand_table[] =
     { 0, { (const PTR) &bsp_cgen_ifld_table[7] } }, 
     { 0, { (1<<MACH_BASE) } }  },
 /* rDCD: Destination GPR for format C insns */
-  { "rDCD", BSP_OPERAND_RDCD, HW_H_GPR, 9, 3,
+  { "rDCD", BSP_OPERAND_RDCD, HW_H_GPR, 8, 3,
     { 0, { (const PTR) &bsp_cgen_ifld_table[9] } }, 
     { 0, { (1<<MACH_BASE) } }  },
 /* rAltC: Destination AltR for format C insns */
@@ -575,9 +575,9 @@ static const CGEN_IBASE bsp_cgen_insn_table[MAX_INSNS] =
     BSP_INSN_LSH, "lsh", "lsh", 16,
     { 0, { (1<<MACH_BASE) } }
   },
-/* gtbitsi $bitswallow $rDCD $N */
+/* getbitsi $bitswallow $rDCD $N */
   {
-    BSP_INSN_GETBITSI, "getbitsi", "gtbitsi", 16,
+    BSP_INSN_GETBITSI, "getbitsi", "getbitsi", 16,
     { 0, { (1<<MACH_BASE) } }
   },
 /* probebitsi $rDCD $N */

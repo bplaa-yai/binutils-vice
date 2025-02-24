@@ -437,7 +437,7 @@ static const CGEN_OPCODE bsp_cgen_insn_opcode_table[MAX_INSNS] =
     { { MNEM, ' ', OP (RSC), ' ', OP (RT), 0 } },
     & ifmt_lsh, { 0x7c00 }
   },
-/* gtbitsi $bitswallow $rDCD $N */
+/* getbitsi $bitswallow $rDCD $N */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (BITSWALLOW), ' ', OP (RDCD), ' ', OP (N), 0 } },
