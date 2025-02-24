@@ -192,14 +192,14 @@ static const CGEN_OPINST sfmt_copyfrom_ops[] = {
   { END }
 };
 
-static const CGEN_OPINST sfmt_lhr_ops[] = {
+static const CGEN_OPINST sfmt_llh_ops[] = {
   { INPUT, "h_memory_HI_ext__USI_rSC", HW_H_MEMORY, CGEN_MODE_HI, 0, 0, 0 },
   { INPUT, "rSC", HW_H_GPR, CGEN_MODE_UINT, OP_ENT (RSC), 0, 0 },
   { OUTPUT, "rDCD", HW_H_GPR, CGEN_MODE_UINT, OP_ENT (RDCD), 0, 0 },
   { END }
 };
 
-static const CGEN_OPINST sfmt_lsr_ops[] = {
+static const CGEN_OPINST sfmt_lsh_ops[] = {
   { INPUT, "rSC", HW_H_GPR, CGEN_MODE_UINT, OP_ENT (RSC), 0, 0 },
   { INPUT, "rT", HW_H_GPR, CGEN_MODE_UINT, OP_ENT (RT), 0, 0 },
   { OUTPUT, "h_memory_HI_ext__USI_rSC", HW_H_MEMORY, CGEN_MODE_HI, 0, 0, 0 },
@@ -259,8 +259,8 @@ static const CGEN_OPINST *bsp_cgen_opinst_table[MAX_INSNS] = {
   & sfmt_abs_ops[0],
   & sfmt_copyto_ops[0],
   & sfmt_copyfrom_ops[0],
-  & sfmt_lhr_ops[0],
-  & sfmt_lsr_ops[0],
+  & sfmt_llh_ops[0],
+  & sfmt_lsh_ops[0],
   & sfmt_nop_ops[0],
   & sfmt_nop_ops[0],
   & sfmt_nop_ops[0],

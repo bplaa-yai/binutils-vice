@@ -565,14 +565,14 @@ static const CGEN_IBASE bsp_cgen_insn_table[MAX_INSNS] =
     BSP_INSN_COPYFROM, "copyfrom", "copyfrom", 16,
     { 0, { (1<<MACH_BASE) } }
   },
-/* lhr $rDCD $rSC */
+/* llh $rDCD $rSC */
   {
-    BSP_INSN_LHR, "lhr", "lhr", 16,
+    BSP_INSN_LLH, "llh", "llh", 16,
     { 0, { (1<<MACH_BASE) } }
   },
-/* lhr $rSC $rT */
+/* lsh $rSC $rT */
   {
-    BSP_INSN_LSR, "lsr", "lhr", 16,
+    BSP_INSN_LSH, "lsh", "lsh", 16,
     { 0, { (1<<MACH_BASE) } }
   },
 /* gtbitsi $bitswallow $rDCD $N */

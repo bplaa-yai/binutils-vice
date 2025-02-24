@@ -420,9 +420,9 @@
 )
 (define-insn
   (name addi)
-  (comment "And rSI with imm (8bit unsigned)")
+  (comment "Add rSI with imm (8bit unsigned)")
   (syntax "addi $rAB $imm")
-  (format (+ FMT_B OPB_ANDI rAB imm))
+  (format (+ FMT_B OPB_ADDI rAB imm))
   (semantics 
    (sequence ((SI l_sum))
      (set rstatus (and rstatus #x0FFF))
@@ -749,16 +749,16 @@
   (semantics (set rDCD rAltC))
 )
 (define-insn
-  (name lhr)
+  (name llh)
   (comment "Load rD with data at address rS")
-  (syntax "lhr $rDCD $rSC")
+  (syntax "llh $rDCD $rSC")
   (format (+ FMT_C OPC_LLOADH EXT_FALSE rDCD rSC (f-rT 0)))
   (semantics (set rDCD (mem HI (ext USI rSC))))
 )
 (define-insn
-  (name lsr)
+  (name lsh)
   (comment "Store rT tp address rS")
-  (syntax "lhr $rSC $rT")
+  (syntax "lsh $rSC $rT")
   (format (+ FMT_C OPC_LSTOREH EXT_FALSE (f-rD-CD 0) rSC rT))
   (semantics (set (mem HI (ext USI rSC)) rT))
 )

@@ -84,11 +84,11 @@ static const CGEN_IFMT ifmt_copyfrom = {
   16, 16, 0xfc38, { { F (F_IFORMAT) }, { F (F_OPCODE_CD) }, { F (F_RALT_C) }, { F (F_RS_C) }, { F (F_RT) }, { 0 } }
 };
 
-static const CGEN_IFMT ifmt_lhr = {
+static const CGEN_IFMT ifmt_llh = {
   16, 16, 0xfe07, { { F (F_IFORMAT) }, { F (F_OPCODE_CD) }, { F (F_EXT_C) }, { F (F_RD_CD) }, { F (F_RS_C) }, { F (F_RT) }, { 0 } }
 };
 
-static const CGEN_IFMT ifmt_lsr = {
+static const CGEN_IFMT ifmt_lsh = {
   16, 16, 0x10180, { { F (F_IFORMAT) }, { F (F_OPCODE_CD) }, { F (F_EXT_C) }, { F (F_RD_CD) }, { F (F_RS_C) }, { F (F_RT) }, { 0 } }
 };
 
@@ -425,17 +425,17 @@ static const CGEN_OPCODE bsp_cgen_insn_opcode_table[MAX_INSNS] =
     { { MNEM, ' ', OP (RALTC), ' ', OP (RDCD), 0 } },
     & ifmt_copyfrom, { 0x7400 }
   },
-/* lhr $rDCD $rSC */
+/* llh $rDCD $rSC */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RDCD), ' ', OP (RSC), 0 } },
-    & ifmt_lhr, { 0x7800 }
+    & ifmt_llh, { 0x7800 }
   },
-/* lhr $rSC $rT */
+/* lsh $rSC $rT */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RSC), ' ', OP (RT), 0 } },
-    & ifmt_lsr, { 0x7c00 }
+    & ifmt_lsh, { 0x7c00 }
   },
 /* gtbitsi $bitswallow $rDCD $N */
   {
