@@ -61,7 +61,7 @@ static const CGEN_IFMT ifmt_nop = {
 };
 
 static const CGEN_IFMT ifmt_b = {
-  16, 16, 0xff00, { { F (F_IFORMAT) }, { F (F_OPCODE_AB) }, { F (F_GPR_COND_AB) }, { F (F_IMM) }, { 0 } }
+  16, 16, 0xff00, { { F (F_IFORMAT) }, { F (F_OPCODE_AB) }, { F (F_GPR_COND_AB) }, { F (F_LABEL) }, { 0 } }
 };
 
 static const CGEN_IFMT ifmt_jr = {
@@ -237,55 +237,55 @@ static const CGEN_OPCODE bsp_cgen_insn_opcode_table[MAX_INSNS] =
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RAB), ' ', OP (IMM), 0 } },
-    & ifmt_lh, { 0x1000 }
+    & ifmt_lh, { 0x2800 }
   },
-/* b $imm */
+/* b $label */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (IMM), 0 } },
-    & ifmt_b, { 0x1e00 }
+    { { MNEM, ' ', OP (LABEL), 0 } },
+    & ifmt_b, { 0x1f00 }
   },
-/* beq $imm */
+/* beq $label */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (IMM), 0 } },
+    { { MNEM, ' ', OP (LABEL), 0 } },
     & ifmt_b, { 0x1800 }
   },
-/* bne $imm */
+/* bne $label */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (IMM), 0 } },
+    { { MNEM, ' ', OP (LABEL), 0 } },
     & ifmt_b, { 0x1900 }
   },
-/* bge $imm */
+/* bge $label */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (IMM), 0 } },
-    & ifmt_b, { 0x1900 }
-  },
-/* blt $imm */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (IMM), 0 } },
+    { { MNEM, ' ', OP (LABEL), 0 } },
     & ifmt_b, { 0x1a00 }
   },
-/* bext0 $imm */
+/* blt $label */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (IMM), 0 } },
+    { { MNEM, ' ', OP (LABEL), 0 } },
     & ifmt_b, { 0x1b00 }
   },
-/* bext1 $imm */
+/* bext0 $label */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (IMM), 0 } },
+    { { MNEM, ' ', OP (LABEL), 0 } },
     & ifmt_b, { 0x1c00 }
   },
-/* bext2 $imm */
+/* bext1 $label */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (IMM), 0 } },
+    { { MNEM, ' ', OP (LABEL), 0 } },
     & ifmt_b, { 0x1d00 }
+  },
+/* bext2 $label */
+  {
+    { 0, 0, 0, 0 },
+    { { MNEM, ' ', OP (LABEL), 0 } },
+    & ifmt_b, { 0x1e00 }
   },
 /* jr $rT */
   {

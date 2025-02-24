@@ -241,6 +241,7 @@ const CGEN_IFLD bsp_cgen_ifld_table[] =
   { BSP_F_M_D, "f-M-D", 0, 16, 5, 2, { 0, { (1<<MACH_BASE) } }  },
   { BSP_F_M2_D, "f-M2-D", 0, 16, 3, 1, { 0, { (1<<MACH_BASE) } }  },
   { BSP_F_N_D, "f-N-D", 0, 16, 3, 4, { 0, { (1<<MACH_BASE) } }  },
+  { BSP_F_LABEL, "f-label", 0, 16, 7, 8, { 0|A(PCREL_ADDR), { (1<<MACH_BASE) } }  },
   { 0, 0, 0, 0, 0, 0, {0, {0}} }
 };
 
@@ -326,6 +327,10 @@ const CGEN_OPERAND bsp_cgen_operand_table[] =
   { "L", BSP_OPERAND_L, HW_H_UINT, 7, 4,
     { 0, { (const PTR) &bsp_cgen_ifld_table[15] } }, 
     { 0, { (1<<MACH_BASE) } }  },
+/* label: 16 bit pc relative address */
+  { "label", BSP_OPERAND_LABEL, HW_H_UINT, 7, 8,
+    { 0, { (const PTR) &bsp_cgen_ifld_table[19] } }, 
+    { 0|A(PCREL_ADDR), { (1<<MACH_BASE) } }  },
 /* sentinel */
   { 0, 0, 0, 0, 0,
     { 0, { (const PTR) 0 } },

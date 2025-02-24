@@ -129,6 +129,9 @@ bsp_cgen_print_operand (cd, opindex, xinfo, fields, attrs, pc, length)
     case BSP_OPERAND_RT :
       print_keyword (cd, info, & bsp_cgen_opval_h_gpr, fields->f_rT, 0);
       break;
+    case BSP_OPERAND_LABEL :
+      print_address (cd, info, fields->f_label, 0|(1<<CGEN_OPERAND_PCREL_ADDR), pc, length);
+      break;
 
     default :
       /* xgettext:c-format */

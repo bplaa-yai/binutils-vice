@@ -113,6 +113,13 @@ bsp_cgen_parse_operand (cd, opindex, strp, fields)
     case BSP_OPERAND_RT :
       errmsg = cgen_parse_keyword (cd, strp, & bsp_cgen_opval_h_gpr, & fields->f_rT);
       break;
+    case BSP_OPERAND_LABEL :
+      {
+        bfd_vma value;
+        errmsg = cgen_parse_address (cd, strp, BSP_OPERAND_LABEL, 0, NULL,  & value);
+        fields->f_label = value;
+      }
+      break;
 
     default :
       /* xgettext:c-format */

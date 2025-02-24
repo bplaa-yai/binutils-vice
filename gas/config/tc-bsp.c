@@ -271,15 +271,15 @@ md_cgen_lookup_reloc (insn, operand, fixP)
      const CGEN_OPERAND * operand;
      fixS *               fixP;
 {
-/*  switch (operand->type)
+  switch (operand->type)
     {
-    case BSP_OPERAND_DLABEL:
+    case BSP_OPERAND_LABEL:
       fixP->fx_pcrel = TRUE;
       return BFD_RELOC_BSP_LABEL16;
 
     default: 
       break;
-      }*/
+      }
   return BFD_RELOC_NONE;
 }
 

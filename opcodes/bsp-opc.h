@@ -82,6 +82,7 @@ struct cgen_fields
   long f_M_D;
   long f_M2_D;
   long f_N_D;
+  long f_label;
 };
 
 #define CGEN_INIT_PARSE(od) \

@@ -602,6 +602,13 @@ bsp_cgen_insert_operand (cd, opindex, fields, buffer, pc)
     case BSP_OPERAND_RT :
       errmsg = insert_normal (cd, fields->f_rT, 0, 0, 2, 3, 16, total_length, buffer);
       break;
+    case BSP_OPERAND_LABEL :
+      {
+        long value = fields->f_label - 2; // delay slot
+        value = (signed char) value >> 1;
+        errmsg = insert_normal (cd, value, 0|(1<<CGEN_IFLD_SIGNED)|(1<<CGEN_IFLD_PCREL_ADDR), 0, 7, 8, 16, total_length, buffer);
+      }
+      break;
 
     default :
       /* xgettext:c-format */
@@ -680,6 +687,14 @@ bsp_cgen_extract_operand (cd, opindex, ex_info, insn_value, fields, pc)
     case BSP_OPERAND_RT :
       length = extract_normal (cd, ex_info, insn_value, 0, 0, 2, 3, 16, total_length, pc, & fields->f_rT);
       break;
+    case BSP_OPERAND_LABEL :
+      {
+        long value;
+        length = extract_normal (cd, ex_info, insn_value, 0|(1<<CGEN_IFLD_SIGNED)|(1<<CGEN_IFLD_PCREL_ADDR), 0, 7, 8, 16, total_length, pc, & value);
+        value = ((((value) << (1))) + (pc) + 2);
+        fields->f_label = value;
+      }
+      break;
 
     default :
       /* xgettext:c-format */
@@ -754,6 +769,9 @@ bsp_cgen_get_int_operand (cd, opindex, fields)
     case BSP_OPERAND_RT :
       value = fields->f_rT;
       break;
+    case BSP_OPERAND_LABEL :
+      value = fields->f_label;
+      break;
 
     default :
       /* xgettext:c-format */
@@ -807,6 +825,9 @@ bsp_cgen_get_vma_operand (cd, opindex, fields)
       break;
     case BSP_OPERAND_RT :
       value = fields->f_rT;
+      break;
+    case BSP_OPERAND_LABEL :
+      value = fields->f_label;
       break;
 
     default :
@@ -871,6 +892,9 @@ bsp_cgen_set_int_operand (cd, opindex, fields, value)
     case BSP_OPERAND_RT :
       fields->f_rT = value;
       break;
+    case BSP_OPERAND_LABEL :
+      fields->f_label = value;
+      break;
 
     default :
       /* xgettext:c-format */
@@ -921,6 +945,9 @@ bsp_cgen_set_vma_operand (cd, opindex, fields, value)
       break;
     case BSP_OPERAND_RT :
       fields->f_rT = value;
+      break;
+    case BSP_OPERAND_LABEL :
+      fields->f_label = value;
       break;
 
     default :
