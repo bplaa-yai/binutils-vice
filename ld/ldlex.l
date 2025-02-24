@@ -34,9 +34,9 @@ This was written by steve chamberlain
 #define TRUE_FALSE_ALREADY_DEFINED
 #endif /* MPW */
 
+#include "safe-ctype.h"
 #include "bfd.h"
 #include "sysdep.h"
-#include "safe-ctype.h"
 #include "bfdlink.h"
 #include "ld.h"
 #include "ldmisc.h"

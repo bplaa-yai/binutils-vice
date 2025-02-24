@@ -139,6 +139,7 @@ ALL_EMULATIONS = \
 	eavr3.o \
 	eavr4.o \
 	eavr5.o \
+	ebsp.o \
 	ecoff_sparc.o \
 	ecrisaout.o \
 	ecriself.o \
@@ -554,6 +555,9 @@ eavr5.c: $(srcdir)/emulparams/avr5.sh \
   $(srcdir)/emultempl/generic.em $(srcdir)/scripttempl/avr.sc \
   ${GEN_DEPENDS}
 	${GENSCRIPTS} avr5 "$(tdir_avr85xx)"
+ebsp.c: $(srcdir)/emulparams/bsp.sh \
+  $(srcdir)/emultempl/generic.em $(srcdir)/scripttempl/aout.sc ${GEN_DEPENDS}
+	${GENSCRIPTS} bsp "$(tdir_bsp)"
 ecoff_sparc.c: $(srcdir)/emulparams/coff_sparc.sh \
   $(srcdir)/emultempl/generic.em $(srcdir)/scripttempl/sparccoff.sc ${GEN_DEPENDS}
 	${GENSCRIPTS} coff_sparc "$(tdir_coff_sparc)"

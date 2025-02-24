@@ -25,6 +25,7 @@ LIBIBERTY = ../libiberty/libiberty.a
 # Header files.
 HFILES = \
 	arm-opc.h \
+	bsp-desc.h bsp-opc.h \
 	fr30-desc.h fr30-opc.h \
 	frv-desc.h frv-opc.h \
 	h8500-opc.h \
@@ -52,6 +53,12 @@ CFILES = \
 	arc-ext.c \
 	arm-dis.c \
 	avr-dis.c \
+	bsp-asm.c \
+	bsp-desc.c \
+	bsp-dis.c \
+	bsp-ibld.c \
+	bsp-opc.c \
+	bsp-opinst.c \
 	cgen-asm.c \
 	cgen-dis.c \
 	cgen-opc.c \
@@ -173,6 +180,12 @@ ALL_MACHINES = \
 	arc-ext.lo \
 	arm-dis.lo \
 	avr-dis.lo \
+	bsp-asm.lo \
+	bsp-desc.lo \
+	bsp-dis.lo \
+	bsp-ibld.lo \
+	bsp-opc.lo \
+	bsp-opinst.lo \
 	cgen-asm.lo \
 	cgen-dis.lo \
 	cgen-opc.lo \
@@ -366,6 +379,7 @@ FRV_DEPS = stamp-frv
 OPENRISC_DEPS = stamp-openrisc
 IQ2000_DEPS = stamp-iq2000
 XSTORMY16_DEPS = stamp-xstormy16
+BSP_DEPS = stamp-bsp
 else
 IP2K_DEPS =
 M32R_DEPS =
@@ -374,6 +388,7 @@ FRV_DEPS =
 OPENRISC_DEPS = 
 IQ2000_DEPS = 
 XSTORMY16_DEPS = 
+BSP_DEPS = 
 endif
 
 run-cgen:
@@ -427,6 +442,11 @@ $(srcdir)/xstormy16-desc.h $(srcdir)/xstormy16-desc.c $(srcdir)/xstormy16-opc.h 
 	@true
 stamp-xstormy16: $(CGENDEPS) $(CPUDIR)/xstormy16.cpu $(CPUDIR)/xstormy16.opc
 	$(MAKE) run-cgen arch=xstormy16 prefix=xstormy16 options= extrafiles=
+
+$(srcdir)/bsp-desc.h $(srcdir)/bsp-desc.c $(srcdir)/bsp-opc.h $(srcdir)/bsp-opc.c $(srcdir)/bsp-ibld.c $(srcdir)/bsp-opinst.c $(srcdir)/bsp-asm.c $(srcdir)/bsp-dis.c: $(BSP_DEPS)
+	@true
+stamp-bsp: $(CGENDEPS) $(CPUDIR)/bsp.cpu
+	$(MAKE) run-cgen arch=bsp prefix=bsp options=opinst extrafiles=opinst
 
 ia64-gen: ia64-gen.o
 	$(LINK) ia64-gen.o $(LIBIBERTY)
@@ -521,6 +541,25 @@ arm-dis.lo: arm-dis.c sysdep.h config.h $(INCDIR)/ansidecl.h \
 avr-dis.lo: avr-dis.c sysdep.h config.h $(INCDIR)/ansidecl.h \
   $(INCDIR)/dis-asm.h $(BFD_H) $(INCDIR)/symcat.h opintl.h \
   $(INCDIR)/libiberty.h $(INCDIR)/opcode/avr.h
+bsp-asm.lo: bsp-asm.c sysdep.h config.h $(INCDIR)/ansidecl.h \
+  $(BFD_H) $(INCDIR)/symcat.h bsp-desc.h $(INCDIR)/opcode/cgen.h \
+  bsp-opc.h opintl.h $(INCDIR)/xregex.h $(INCDIR)/xregex2.h \
+  $(INCDIR)/libiberty.h $(INCDIR)/safe-ctype.h
+bsp-desc.lo: bsp-desc.c sysdep.h config.h $(INCDIR)/ansidecl.h \
+  $(BFD_H) $(INCDIR)/symcat.h bsp-desc.h $(INCDIR)/opcode/cgen.h \
+  bsp-opc.h opintl.h $(INCDIR)/libiberty.h
+bsp-dis.lo: bsp-dis.c sysdep.h config.h $(INCDIR)/ansidecl.h \
+  $(INCDIR)/dis-asm.h $(BFD_H) $(INCDIR)/symcat.h bsp-desc.h \
+  $(INCDIR)/opcode/cgen.h bsp-opc.h opintl.h
+bsp-ibld.lo: bsp-ibld.c sysdep.h config.h $(INCDIR)/ansidecl.h \
+  $(INCDIR)/dis-asm.h $(BFD_H) $(INCDIR)/symcat.h bsp-desc.h \
+  $(INCDIR)/opcode/cgen.h bsp-opc.h opintl.h $(INCDIR)/safe-ctype.h
+bsp-opc.lo: bsp-opc.c sysdep.h config.h $(INCDIR)/ansidecl.h \
+  $(BFD_H) $(INCDIR)/symcat.h bsp-desc.h $(INCDIR)/opcode/cgen.h \
+  bsp-opc.h $(INCDIR)/libiberty.h
+bsp-opinst.lo: bsp-opinst.c sysdep.h config.h $(INCDIR)/ansidecl.h \
+  $(BFD_H) $(INCDIR)/symcat.h bsp-desc.h $(INCDIR)/opcode/cgen.h \
+  bsp-opc.h
 cgen-asm.lo: cgen-asm.c sysdep.h config.h $(INCDIR)/ansidecl.h \
   $(INCDIR)/libiberty.h $(INCDIR)/safe-ctype.h $(BFD_H) \
   $(INCDIR)/symcat.h $(INCDIR)/opcode/cgen.h opintl.h

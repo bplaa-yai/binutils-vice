@@ -86,6 +86,7 @@ opcodes)
 	${cgen} -s ${cgendir}/cgen-opc.scm \
 		-s ${cgendir} \
 		${cgenflags} \
+		-b \
 		-f "${options}" \
 		-m all \
 		-a ${arch} \

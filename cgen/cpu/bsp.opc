@@ -1,0 +1,30 @@
+/* BSP opcode support.  -*- C -*-
+   Copyright (C) 2002 Ilya Volynets
+   This file is part of CGEN.  */
+
+/*
+   Each section is delimited with start and end markers.
+
+   <arch>-opc.h additions use: "-- opc.h"
+   <arch>-opc.c additions use: "-- opc.c"
+   <arch>-asm.c additions use: "-- asm.c"
+   <arch>-dis.c additions use: "-- dis.c"
+   <arch>-ibd.h additions use: "-- ibd.h"
+*/
+
+/* -- opc.h */
+
+/* Override disassembly hashing - there are variable bits in the top
+   byte of these instructions.  */
+#define CGEN_DIS_HASH_SIZE 8
+#define CGEN_DIS_HASH(buf,value) (((* (unsigned char*) (buf)) >> 3) % CGEN_DIS_HASH_SIZE)
+
+
+/* -- opc.c */
+
+/* -- asm.c */
+
+/* -- dis.c */
+
+/* -- */
+

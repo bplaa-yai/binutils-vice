@@ -203,6 +203,7 @@ extern int print_insn_sparc		PARAMS ((bfd_vma, disassemble_info*));
 extern int print_insn_big_a29k		PARAMS ((bfd_vma, disassemble_info*));
 extern int print_insn_little_a29k	PARAMS ((bfd_vma, disassemble_info*));
 extern int print_insn_avr		PARAMS ((bfd_vma, disassemble_info*));
+extern int print_insn_bsp		PARAMS ((bfd_vma, disassemble_info*));
 extern int print_insn_d10v		PARAMS ((bfd_vma, disassemble_info*));
 extern int print_insn_d30v		PARAMS ((bfd_vma, disassemble_info*));
 extern int print_insn_dlx 		PARAMS ((bfd_vma, disassemble_info*));

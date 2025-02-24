@@ -4612,6 +4612,7 @@ if test x${all_targets} = xfalse ; then
 	bfd_arc_arch)		ta="$ta arc-dis.lo arc-opc.lo arc-ext.lo" ;;
 	bfd_arm_arch)		ta="$ta arm-dis.lo" ;;
 	bfd_avr_arch)		ta="$ta avr-dis.lo" ;;
+  bfd_bsp_arch)		ta="$ta bsp-asm.lo bsp-desc.lo bsp-dis.lo bsp-ibld.lo bsp-opc.lo bsp-opinst.lo" using_cgen=yes ;;
 	bfd_convex_arch)	;;
 	bfd_cris_arch)		ta="$ta cris-dis.lo cris-opc.lo" ;;
 	bfd_d10v_arch)		ta="$ta d10v-dis.lo d10v-opc.lo" ;;

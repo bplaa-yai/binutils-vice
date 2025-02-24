@@ -548,6 +548,7 @@ do
     aout0_big_vec)		tb="$tb aout0.lo aout32.lo" ;;
     aout_arm_big_vec)		tb="$tb aout-arm.lo aout32.lo" ;;
     aout_arm_little_vec)	tb="$tb aout-arm.lo aout32.lo" ;;
+    bsp_aout_vec)		tb="$tb aout-bsp.lo" ;;
     aout_mips_big_vec)		tb="$tb mipsbsd.lo aout32.lo" ;;
     aout_mips_little_vec)	tb="$tb mipsbsd.lo aout32.lo" ;;
     apollocoff_vec)		tb="$tb coff-apollo.lo" ;;

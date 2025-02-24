@@ -56,6 +56,7 @@ ALL_MACHINES = \
 	cpu-arm.lo \
 	cpu-avr.lo \
 	cpu-cris.lo \
+	cpu-bsp.lo \
 	cpu-d10v.lo \
 	cpu-d30v.lo \
 	cpu-dlx.lo \
@@ -165,6 +166,7 @@ BFD32_BACKENDS = \
 	aout-adobe.lo \
 	aout-arm.lo \
 	aout-cris.lo \
+	aout-bsp.lo \
 	aout-ns32k.lo \
 	aout-sparcle.lo \
 	aout-tic30.lo \
@@ -920,6 +922,7 @@ cpu-alpha.lo: cpu-alpha.c $(INCDIR)/filenames.h
 cpu-arc.lo: cpu-arc.c $(INCDIR)/filenames.h
 cpu-arm.lo: cpu-arm.c $(INCDIR)/filenames.h
 cpu-avr.lo: cpu-avr.c $(INCDIR)/filenames.h
+cpu-bsp.lo: cpu-bsp.c $(INCDIR)/filenames.h
 cpu-cris.lo: cpu-cris.c $(INCDIR)/filenames.h
 cpu-d10v.lo: cpu-d10v.c $(INCDIR)/filenames.h
 cpu-d30v.lo: cpu-d30v.c $(INCDIR)/filenames.h
@@ -976,6 +979,9 @@ aout-arm.lo: aout-arm.c $(INCDIR)/filenames.h libaout.h \
   $(INCDIR)/bfdlink.h $(INCDIR)/aout/aout64.h aoutx.h \
   $(INCDIR)/safe-ctype.h $(INCDIR)/aout/stab_gnu.h $(INCDIR)/aout/stab.def \
   $(INCDIR)/aout/ar.h aout-target.h
+aout-bsp.lo: aout-bsp.c $(INCDIR)/filenames.h libaout.h $(INCDIR)/bfdlink.h \
+  aout-target.h $(INCDIR)/aout/aout64.h $(INCDIR)/aout/stab_gnu.h \
+  $(INCDIR)/aout/stab.def $(INCDIR)/aout/ar.h $(INCDIR)/safe-ctype.h
 aout-cris.lo: aout-cris.c aout32.c aoutx.h $(INCDIR)/filenames.h \
   $(INCDIR)/safe-ctype.h $(INCDIR)/bfdlink.h libaout.h \
   $(INCDIR)/aout/aout64.h $(INCDIR)/aout/stab_gnu.h $(INCDIR)/aout/stab.def \

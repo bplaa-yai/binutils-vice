@@ -273,10 +273,12 @@ static int mips_32bitmode = 0;
    )
 
 #define HAVE_32BIT_GPRS		                   \
-    (mips_opts.gp32 || ! ISA_HAS_64BIT_REGS (mips_opts.isa))
+    (mips_opts.gp32                                \
+     || ! ISA_HAS_64BIT_REGS (mips_opts.isa))
 
 #define HAVE_32BIT_FPRS                            \
-    (mips_opts.fp32 || ! ISA_HAS_64BIT_REGS (mips_opts.isa))
+    (mips_opts.fp32                                \
+     || ! ISA_HAS_64BIT_REGS (mips_opts.isa))
 
 #define HAVE_64BIT_GPRS (! HAVE_32BIT_GPRS)
 #define HAVE_64BIT_FPRS (! HAVE_32BIT_FPRS)

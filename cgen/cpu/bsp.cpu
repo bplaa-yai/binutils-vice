@@ -1,0 +1,822 @@
+; SGI VICE Bit Stream Processor describtion.  -*- Scheme -*-
+; Copyright (C) 2002, Ilya Volynets, Total Knowledge.
+; http://www.total-knowledge.com/
+; This file is part of CGEN.
+; See file COPYING.CGEN for details.
+
+(include "simplify.inc")
+
+(define-arch
+  (name bsp)
+  (comment "SGI VICE Bit Stream Processor (BSP)")
+  (insn-lsb0? #t)
+  (default-alignment unaligned)
+  (machs bsp)
+  (isas bsp)
+)
+
+(define-isa
+  (name bsp)
+  (comment "BSP in R5K( and probably R10K) based O2s")
+;  (default-insn-word-bitsize 16) ;??? Check what it really means
+  (default-insn-bitsize 16)
+  (base-insn-bitsize 16)
+;  (decode-assist (15 14 13 12 11))
+)
+(define-cpu
+  (name bsp)
+  (comment "VICE revision 3 (VICE-C, TRE)")
+  (endian big)
+  (word-bitsize 16)
+)
+(define-mach
+  (name bsp)
+  (comment "R5K based O2")
+  (cpu bsp)
+  (isas bsp)
+)
+(define-model
+  (name bsp)
+  (comment "R5K based O2")
+  (mach bsp)
+  (unit u-exec "execution unit" ()
+	1 1 ; issue done
+	(); state
+	() () () ;inputs outputs profile
+	)
+)
+
+;;;;;;; Actual HW definitions
+(define-hardware
+  (name h-gpr)
+  (comment "General Purpose Register")
+  (attrs (ISA r5k))
+  (type register (UINT 3) (8))
+  (indices keyword "" ((r0 0) (r1 1) (r2 2) (r3 3) (r4 4) (r5 5) (r6 6) (r7 7)))
+)
+; Technically these registers are 32bit, but since we can only access them
+; 16 bits at a time, I'll specify them like that.
+(define-hardware
+  (name h-altr)
+  (comment "Alternate Register (special purpose)")
+  (attrs (ISA r5k))
+  (type register (UINT 4) (16))
+  (indices keyword "" (
+		       (rpage 0)
+		       (alpha_h 1) (alpha_l 2)
+		       (beta_h  3) (beta_l  4)
+		       (cmp_h   5) (cmp_l   6)
+		       (mask_h  7) (mask_l  8)
+		       (root_tbl_ptr 9)
+		       (tbl_res 10)
+		       (block_data 11)
+		       (block_address 12)
+		       (block_ptr 13)
+		       (ac_run 14)
+		       (status_cntl 15)))
+)
+(dnh h-pc "program counter" (PC (ISA r5k)) (pc) () () ())
+(define-hardware
+  (name h-dRAM)
+  (comment "VICE data RAM")
+  (type memory QI (6144))
+)
+(define-hardware
+  (name h-bit-swallow)
+  (comment "q bit in some format D insns")
+  (type immediate (UINT 1))
+  (values keyword "" (("swallow" 1) ("sw" 1)("puke" 0)("" 0)))
+)
+;(define-hardware
+;  (name h-q-bit-D)
+; (comment "q bit in some format D insns")
+;  (type immediate (UINT 1))
+;  (values keyword "" (0 1))
+;)
+
+;(define-hardware
+;  (name h-label)
+;  (comment "label pointint to address in dRAM")
+;  (type immediate 
+
+;;;TODO: define lookup tables
+
+;;;;;;; Instruction fields.
+(define-ifield
+  (name f-iformat)
+  (comment "Format of instruction (A, B, C, or D)")
+  (start 15)
+  (length 2)
+)
+(define-ifield
+  (name f-opcode-AB)
+  (comment "Opcode for format A and B insn")
+  (start 13)
+  (length 3)
+)
+(define-ifield
+  (name f-opcode-CD)
+  (comment "Opcode for format C and D insn")
+  (start 13)
+  (length 4)
+)
+(define-ifield
+  (name f-gpr-cond-AB)
+  (comment "Register/Condition in format A and B insns")
+  (start 10)
+  (length 3)
+)
+(define-ifield
+  (name f-imm)
+  (comment "Offset in format A and (some) B  insns")
+  (start 7)
+  (length 8)
+)
+(define-ifield
+  (name f-rT)
+  (comment "GPR number for JR, ABS, and NEG insns")
+  (start 2)
+  (length 3)
+)
+(define-ifield
+  (name f-ignore-C)
+  (comment "Ignored bits for jr insns")
+  (start 7)
+  (length 5)
+)
+(define-ifield
+  (name f-rD-CD)
+  (comment "Destination GPR for format C insns")
+  (start 9)
+  (length 3)
+)
+(define-ifield
+  (name f-rALT-C)
+  (comment "Alternate register for format C insns")
+  (start 10)
+  (length 4)
+)
+(define-ifield
+  (name f-ext-C)
+  (comment "Extended format C insn bit")
+  (start 9)
+  (length 1)
+)
+(define-ifield
+  (name f-rS-C)
+  (comment "Source GPR for format C insns")
+  (start 5)
+  (length 3)
+)
+(define-ifield
+  (name f-q-D)
+  (comment "q bit of format D insns")
+  (start 9)
+  (length 1)
+)
+(define-ifield
+  (name f-p-D)
+  (comment "q bit of format D insns")
+  (start 8)
+  (length 1)
+)
+(define-ifield
+  (name f-L-D)
+  (comment "number of bits to perform op on")
+  (start 7)
+  (length 4)
+)
+(define-ifield
+  (name f-M-D)
+  (comment "Ignored?")
+  (start 5)
+  (length 2)
+)
+(define-ifield
+  (name f-M2-D)
+  (comment "Ignored")
+  (start 3)
+  (length 1)
+)
+(define-ifield
+  (name f-N-D)
+  (comment "number of bits to perform op on")
+  (start 3)
+  (length 4)
+)
+
+;;;;;;;; insn operands
+(define-operand
+  (name rAB)
+  (comment "Source GPR For format A and B insns")
+  (type h-gpr)
+  (index f-gpr-cond-AB)
+)
+(define-operand
+  (name imm)
+  (comment "Immediate")
+  (type h-uint)
+  (index f-imm)
+)
+;(define-operand
+;  (name dlabel)
+;  (type h-addr)
+;  (index f-imm)
+;)
+;;;TODO: add nice handling for data lables,
+;;;      so that gas keeps track of rPage register, and loads it as nessesary.
+
+(define-operand
+  (name rT)
+  (comment "rT")
+  (type h-gpr)
+  (index f-rT)
+)
+(define-operand
+  (name rDCD)
+  (comment "Destination GPR for format C insns")
+  (type h-gpr)
+  (index f-rD-CD)
+)
+(define-operand
+  (name rAltC)
+  (comment "Destination AltR for format C insns")
+  (type h-altr)
+  (index f-rALT-C)
+)
+(define-operand
+  (name rSC)
+  (comment "Source GPR for format C insns")
+  (type h-gpr)
+  (index f-rS-C)
+)
+;This one is for reference in load/store instructions
+(define-operand
+  (name rpage)
+  (comment "rPage register used implicitly in load/store insns")
+  (attrs SEM-ONLY)
+  (type h-altr)
+  (index f-nil)
+)
+(define-operand
+  (name rstatus)
+  (comment "rStatus -- status register")
+  (attrs SEM-ONLY)
+  (type h-altr)
+  (index f-nil)
+)
+(define-operand
+  (name bitswallow)
+  (comment "swallow bit of some format D insns")
+  (type h-bit-swallow)
+  (index f-q-D)
+)
+(define-operand
+  (name q)
+  (comment "q-bit in format D insns")
+  (type h-uint)
+  (index f-q-D)
+)
+(define-operand
+  (name p)
+  (comment "p")
+  (type h-uint)
+  (index f-p-D)
+)
+(define-operand
+  (name N)
+  (comment "Number of bits")
+  (type h-uint)
+  (index f-N-D)
+)
+(define-operand
+  (name L)
+  (comment "Number of bits")
+  (type h-uint)
+  (index f-L-D)
+)
+
+;;;;;;;;; opcodes
+
+(define-normal-insn-enum insn-format "Format field" () FMT_ f-iformat
+  (("A" 2) ("B" 0) ("C" 1) ("D" 3))
+)
+(define-normal-insn-enum insn-opc-a "Format A opcodes" () OPA_ f-opcode-AB
+  (("LH" 0) ("LBL" 1) ("LBH" 2)
+   ("SH" 3) ("SBL" 4) ("SBH" 5)
+   ("LIL" 6) ("LIH" 7))
+)
+(define-normal-insn-enum insn-opc-b "Format B opcodes" () OPB_ f-opcode-AB
+  (("NOP" 0) ("CMPI" 1) ("ANDI" 2)
+   ("B" 3) ("BREAK" 4) ("ADDI" 5)
+   ("JR" 6) ("RESUME" 7))
+)
+(define-normal-insn-enum insn-condtype "Condition type for branch and jr insns"
+  () COND_ f-gpr-cond-AB
+  (("EQ" 0)("NE" 1)("GE" 1)("LT" 2) ("EXT0" 3)("EXT1" 4)("EXT2" 5)("TRUE" 6))
+)
+(define-normal-insn-enum insn-opc-c "Format C opcodes" () OPC_ f-opcode-CD
+  (("ADD" 0)("SUB" 1)("CMP" 2)("AND" 3)("OR" 4)("LSHIFT" 5)
+   ("ARSHIFT" 6)("MULT" 7)("ZZXLATE" 8)("XOR" 9)("ABS" 10)
+   ("NEG" 11)("COPYTO" 12)("COPYFROM" 13)("LLOADH" 14)("LSTOREH" 15))
+)
+(define-normal-insn-enum insn-ext-c "Extended/Normal format C insn" () EXT_ f-ext-C
+  (("TRUE" 1)("FALSE" 0))
+)
+(define-normal-insn-enum insn-opc-d "Format D opcodes" () OPD_ f-opcode-CD
+  (("GETBITSi" 0)("PROBEBITS" 1)("SHIFTSTREAM" 2)("GETBITSr" 3)
+   ("GENERIC_LOOKUP_PACK" 4)("LEAF_RUN_LEVEL_PARSE" 5)("BLOCK_RUN_LEVEL_PARSE" 6)
+   ("LOAD_CODE_PACK_H261" 7)("GENERIC_LEAF_PARSE" 8)("BLOCK_RUN_SIZE_PARSE" 9)
+   ("CODE_SEARCH" 10)("PACK_BITSTREAM" 12) ("LOAD_CODE_PACK" 13)
+   ("BYTE_ALIGN" 14))
+)
+
+
+;;;;;;;;; INSNS
+
+(define-insn
+  (name lh)
+  (comment "Load half-word (16 bits) rD=MEM[rPage+offset<<1]")
+  (syntax "lh $rAB $imm")
+  (format (+ FMT_A OPA_LH rAB imm))
+  (semantics (set rAB (mem HI (add rpage imm))))
+)
+(define-insn
+  (name lbl)
+  (comment "Load low byte of register rD=MEM[rPage+offset<<1]")
+  (syntax "lbl $rAB $imm")
+  (format (+ FMT_A OPA_LBL rAB imm))
+  (semantics (set rAB (mem QI (add rpage imm))))
+)
+(define-insn
+  (name lbh)
+  (comment "Load high byte of rD=MEM[rPage+offset<<1]")
+  (syntax "lbh $rAB $imm")
+  (format (+ FMT_A OPA_LBH rAB imm))
+  (semantics (set rAB (sll HI (mem QI (add rpage imm)) 8)))
+)
+(define-insn
+  (name sh)
+  (comment "Store half-word (16 bits) MEM[rPage+offset<<1]=rD")
+  (syntax "sh $rAB $imm")
+  (format (+ FMT_A OPA_SH rAB imm))
+  (semantics (set (mem HI (add rpage imm)) rAB))
+)
+(define-insn
+  (name sbl)
+  (comment "Store low byte of register MEM[rPage+offset<<1]=rD")
+  (syntax "sbl $rAB $imm")
+  (format (+ FMT_A OPA_SBL rAB imm))
+  (semantics (set (mem QI (add rpage imm)) rAB))
+)
+(define-insn
+  (name sbh)
+  (comment "Store high byte of MEM[rPage+offset<<1]=rD")
+  (syntax "sbh $rAB $imm")
+  (format (+ FMT_A OPA_SBH rAB imm))
+  (semantics (set (sll HI (mem QI (add rpage imm)) 8) rAB ))
+)
+(define-insn
+  (name lil)
+  (comment "Load immediate low")
+  (syntax "lil $rAB $imm")
+  (format (+ FMT_A OPA_LIL rAB imm))
+  (semantics (set rAB imm))
+)
+(define-insn
+  (name lih)
+  (comment "Load immediate high")
+  (syntax "lih $rAB $imm")
+  (format (+ FMT_A OPA_LIH rAB imm))
+  (semantics (set rAB (sll HI imm 8)))
+)
+(define-insn
+  (name nop)
+  (comment "NOP")
+  (syntax "nop")
+  (format (+ FMT_B OPB_NOP (f-gpr-cond-AB 0) (f-imm 0)))
+  (semantics (nop))
+)
+(define-insn
+  (name cmpi)
+  (comment "Compare rSI with imm (8bit unsigned)")
+  (syntax "cmpi $rAB $imm")
+  (format (+ FMT_B OPB_CMPI rAB imm))
+  (semantics 
+   (sequence ()
+     (set rstatus (and rstatus #x0FFF))
+     (if (lt rAB imm) (set rstatus (or rstatus #x8000)) (nop))
+     (if (eq rAB imm) (set rstatus (or rstatus #x4000)) (nop))))
+)
+(define-insn
+  (name andi)
+  (comment "And rSI with imm (8bit unsigned)")
+  (syntax "andi $rAB $imm")
+  (format (+ FMT_B OPB_ANDI rAB imm))
+  (semantics 
+   (sequence ()
+     (set rstatus (and rstatus #x0FFF))
+     (if (eq rAB imm) (set rstatus (or rstatus #x4000)) (nop))))
+)
+(define-insn
+  (name addi)
+  (comment "And rSI with imm (8bit unsigned)")
+  (syntax "addi $rAB $imm")
+  (format (+ FMT_B OPB_ANDI rAB imm))
+  (semantics 
+   (sequence ((SI l_sum))
+     (set rstatus (and rstatus #x0FFF))
+     (set l_sum (add rAB imm))
+     (if (neg l_sum) (set rstatus (or rstatus #x8000)) (nop))
+     (if (eq l_sum 0) (set rstatus (or rstatus #x4000))(nop))
+     (if (gt l_sum #xFFFF)(set rstatus (or rstatus #x1000))(nop))
+     (set rAB l_sum)))
+)
+(define-insn
+  (name b)
+  (comment "Branch to pc+offset")
+  (syntax "b $imm")
+  (format (+ FMT_B OPB_B COND_TRUE imm))
+  (semantics (delay (const 1) (set pc (add pc imm))))
+)
+(define-insn
+  (name beq)
+  (comment "Branch to pc+offset if last ALU op resulted in zero")
+  (syntax "beq $imm")
+  (format (+ FMT_B OPB_B COND_EQ imm))
+  (semantics
+   (delay (const 1)
+	  (if(eq (and rstatus #x4000) 1)(set pc (add pc imm))(nop))))
+)
+(define-insn
+  (name bne)
+  (comment "Branch to pc+offset if last ALU op resulted in non-zero")
+  (syntax "bne $imm")
+  (format (+ FMT_B OPB_B COND_NE imm))
+  (semantics
+   (delay (const 1)
+	  (if(ne (and rstatus #x4000) 1)(set pc (add pc imm))(nop))))
+)
+(define-insn
+  (name bge)
+  (comment "Branch to pc+offset if last ALU op did not set (N)egative bit in rStatus")
+  (syntax "bge $imm")
+  (format (+ FMT_B OPB_B COND_GE imm))
+  (semantics(delay (const 1)(if(ne (and rstatus #x8000) 1)(set pc (add pc imm))(nop))))
+)
+(define-insn
+  (name blt)
+  (comment "Branch to pc+offset if last ALU op set (N)egative bit in rStatus")
+  (syntax "blt $imm")
+  (format (+ FMT_B OPB_B COND_LT imm))
+  (semantics(delay (const 1)(if(eq (and rstatus #x8000) 1)(set pc (add pc imm))(nop))))
+)
+
+(define-insn
+  (name bext0)
+  (comment "Branch to pc+offset if EXT0 bit in rStatus is set")
+  (syntax "bext0 $imm")
+  (format (+ FMT_B OPB_B COND_EXT0 imm))
+  (semantics(delay (const 1)(if(eq (and rstatus #x0800) 1)(set pc (add pc imm))(nop))))
+)
+(define-insn
+  (name bext1)
+  (comment "Branch to pc+offset if EXT0 bit in rStatus is set")
+  (syntax "bext1 $imm")
+  (format (+ FMT_B OPB_B COND_EXT1 imm))
+  (semantics(delay (const 1)(if(eq (and rstatus #x0400) 1)(set pc (add pc imm))(nop))))
+)
+(define-insn
+  (name bext2)
+  (comment "Branch to pc+offset if EXT0 bit in rStatus is set")
+  (syntax "bext2 $imm")
+  (format (+ FMT_B OPB_B COND_EXT2 imm))
+  (semantics(delay (const 1)(if(eq (and rstatus #x0200) 1)(set pc (add pc imm))(nop))))
+)
+
+(define-insn
+  (name jr)
+  (comment "Branch to rT")
+  (syntax "jr $rT")
+  (format (+ FMT_B OPB_JR COND_TRUE (f-ignore-C 0) rT))
+  (semantics (delay (const 1) (set pc (add pc rT))))
+)
+(define-insn
+  (name jreq)
+  (comment "Jump to rT if last ALU op resulted in Z bit of status being set")
+  (syntax "jreq $rT")
+  (format (+ FMT_B OPB_JR COND_EQ (f-ignore-C 0) rT))
+  (semantics
+   (delay (const 1)
+	  (if(ne (and rstatus #x4000) 1)
+	     (set pc (add pc rT))
+	     (nop))))
+)
+(define-insn
+  (name jrnen)
+  (comment "Jump to rT if last ALU op resulted in Z bit of status not being set")
+  (syntax "jreq $rT")
+  (format (+ FMT_B OPB_JR COND_NE (f-ignore-C 0) rT))
+  (semantics
+   (delay (const 1) 
+	  (if(eq (and rstatus #x4000) 1)
+	     (set pc (add pc rT))
+	     (nop))))
+)
+(define-insn
+  (name jrge)
+  (comment "Jump to rT if last ALU op resulted in N bit of status not being set")
+  (syntax "jrge $rT")
+  (format (+ FMT_B OPB_JR COND_GE (f-ignore-C 0) rT))
+  (semantics
+   (delay (const 1) 
+	  (if(ne (and rstatus #x8000) 1)
+	     (set pc (add pc rT))
+	     (nop))))
+)
+(define-insn
+  (name jrlt)
+  (comment "Jump to rT if last ALU op resulted in N bit of status being set")
+  (syntax "jrge $rT")
+  (format (+ FMT_B OPB_JR COND_LT (f-ignore-C 0) rT))
+  (semantics
+   (delay (const 1)
+	  (if(eq (and rstatus #x8000) 1)
+	     (set pc (add pc rT))
+	     (nop))))
+)
+(define-insn
+  (name jrext0)
+  (comment "Jump to rT if EXT0 bit of status is set")
+  (syntax "jrext0 $rT")
+  (format (+ FMT_B OPB_JR COND_EXT0 (f-ignore-C 0) rT))
+  (semantics
+   (delay (const 1)
+	  (if(eq (and rstatus #x0800) 1)
+	     (set pc (add pc rT))
+	     (nop))))
+)
+(define-insn
+  (name jrext1)
+  (comment "Jump to rT if EXT1 bit of status is set")
+  (syntax "jrext1 $rT")
+  (format (+ FMT_B OPB_JR COND_EXT1 (f-ignore-C 0) rT))
+  (semantics
+   (delay (const 1)
+	  (if(eq (and rstatus #x0400) 1)
+	     (set pc (add pc rT))
+	     (nop))))
+)
+(define-insn
+  (name jrext2)
+  (comment "Jump to rT if EXT2 bit of status is set")
+  (syntax "jrext2 $rT")
+  (format (+ FMT_B OPB_JR COND_EXT2 (f-ignore-C 0) rT))
+  (semantics
+   (delay (const 1)
+	  (if(eq (and rstatus #x0200) 1)
+	     (set pc (add pc rT))
+	     (nop))))
+)
+
+; I have to figure out CALL/RET insns, as apparently docs messed that up
+;(define-insn
+;  (name ret)
+;  (comment "Branch to pc+offset")
+;  (syntax "ret")
+;  (format (+ FMT_B OPB_B COND_TRUE imm))
+;  (semantics (delay (const 1) (set pc (add pc imm))))
+;)
+
+(define-insn
+  (name break)
+  (comment "Cause interrupt to CPU")
+  (syntax "break")
+  (format (+ FMT_B OPB_BREAK (f-gpr-cond-AB 0) (f-imm 0)))
+  (semantics (nop))
+)
+(define-insn
+  (name resume)
+  (comment "Resume multi-cycle insn")
+  (syntax "resume")
+  (format (+ FMT_B OPB_RESUME (f-gpr-cond-AB 0) (f-imm 0)))
+  (semantics (nop))
+)
+;;;;;;;; Here comes format C
+(define-insn
+  (name add)
+  (comment "Tradic add: rD=rS+rT")
+  (syntax "add $rDCD $rSC $rT")
+  (format (+ FMT_C OPC_ADD EXT_FALSE rDCD rSC rT))
+  (semantics
+   (sequence((SI l_sum))
+    (set l_sum (add rSC rT))
+    (set rstatus (and rstatus #x0FFF))
+    (if (neg l_sum) (set rstatus (or rstatus #x8000)) (nop))
+    (if (eq l_sum 0) (set rstatus (or rstatus #x4000))(nop))
+    (if (gt l_sum #xFFFF)(set rstatus (or rstatus #x1000))(nop))
+    (set rDCD l_sum)))
+)
+(define-insn
+  (name addc)
+  (comment "Tradic add with carry: rD=rS+rT")
+  (syntax "addc $rDCD $rSC $rT")
+  (format (+ FMT_C OPC_ADD EXT_TRUE rDCD rSC rT))
+  (semantics
+   (sequence((SI l_sum))
+    (set l_sum (add rSC rT))
+    (set rstatus (and rstatus #x0FFF))
+    (if (neg l_sum) (set rstatus (or rstatus #x8000)) (nop))
+    (if (eq l_sum 0) (set rstatus (or rstatus #x4000))(nop))
+    (if (gt l_sum #xFFFF)(set rstatus (or rstatus #x2000))(nop))
+    (set rDCD l_sum)))
+)
+(define-insn
+  (name sub)
+  (comment "Tradic substruct: rD=rS-rT")
+  (syntax "sub $rDCD $rSC $rT")
+  (format (+ FMT_C OPC_ADD EXT_FALSE rDCD rSC rT))
+  (semantics
+   (sequence((SI l_sum))
+    (set l_sum (sub rSC rT))
+    (set rstatus (and rstatus #x0FFF))
+    (if (neg l_sum) (set rstatus (or rstatus #x8000)) (nop))
+    (if (eq l_sum 0) (set rstatus (or rstatus #x4000))(nop))
+    (if (gt l_sum #xFFFF)(set rstatus (or rstatus #x1000))(nop))
+    (set rDCD l_sum)))
+)
+(define-insn
+  (name subc)
+  (comment "Tradic substruct with carry: rD=rS+rT")
+  (syntax "subc $rDCD $rSC $rT")
+  (format (+ FMT_C OPC_ADD EXT_TRUE rDCD rSC rT))
+  (semantics
+   (sequence((SI l_sum))
+    (set l_sum (sub rSC rT))
+    (set rstatus (and rstatus #x0FFF))
+    (if (neg l_sum) (set rstatus (or rstatus #x8000)) (nop))
+    (if (eq l_sum 0) (set rstatus (or rstatus #x4000))(nop))
+    (if (gt l_sum #xFFFF)(set rstatus (or rstatus #x2000))(nop))
+    (set rDCD l_sum)))
+)
+(define-insn
+  (name and)
+  (comment "Tradic bitwise and: rD=rS&rT")
+  (syntax "and $rDCD $rSC $rT")
+  (format (+ FMT_C OPC_AND EXT_FALSE rDCD rSC rT))
+  (semantics
+   (sequence((SI l_sum))
+    (set l_sum (and rSC rT))
+    (set rstatus (and rstatus #x0FFF))
+    (if (neg l_sum) (set rstatus (or rstatus #x8000)) (nop))
+    (if (eq l_sum 0) (set rstatus (or rstatus #x4000))(nop))
+    (set rDCD l_sum)))
+)
+(define-insn
+  (name or)
+  (comment "Tradic bitwise or: rD=rS|rT")
+  (syntax "or $rDCD $rSC $rT")
+  (format (+ FMT_C OPC_OR EXT_FALSE rDCD rSC rT))
+  (semantics
+   (sequence((SI l_sum))
+    (set l_sum (or rSC rT))
+    (set rstatus (and rstatus #x0FFF))
+    (if (eq l_sum 0) (set rstatus (or rstatus #x4000))(nop))
+    (set rDCD l_sum)))
+)
+(define-insn
+  (name sll)
+  (comment "Tradic zero-fill left shift: rD=rS<<rT")
+  (syntax "sll $rDCD $rSC $rT")
+  (format (+ FMT_C OPC_LSHIFT EXT_FALSE rDCD rSC rT))
+  (semantics(set rDCD (sll rSC (trunc QI rT))))
+)
+(define-insn
+  (name sra)
+  (comment "Tradic arithmetic (sign-fill) right shift: rD=rS>>rT")
+  (syntax "sra $rDCD $rSC $rT")
+  (format (+ FMT_C OPC_ARSHIFT EXT_FALSE rDCD rSC rT))
+  (semantics(set rDCD (sra rSC (trunc QI rT))))
+)
+(define-insn
+  (name mul)
+  (comment "Multiply: rD=(rS*rT)&0xFF; cmp_h=(rS*rT)>>16")
+  (syntax "mul $rDCD $rSC $rT")
+  (format (+ FMT_C OPC_MULT EXT_FALSE rDCD rSC rT))
+  (semantics
+   (sequence ((SI l_res))
+    (set l_res (mul rSC rT))
+    (set rDCD (and l_res #xFF))
+    (set (reg h-altr 5) (srl l_res 16))))
+)
+(define-insn
+  (name xor)
+  (comment "Tradic bitwise xor: rD=rS^rT")
+  (syntax "xor $rDCD $rSC $rT")
+  (format (+ FMT_C OPC_XOR EXT_FALSE rDCD rSC rT))
+  (semantics
+   (sequence((SI l_sum))
+    (set l_sum (xor rSC rT))
+    (set rstatus (and rstatus #x0FFF))
+    (if (eq l_sum 0) (set rstatus (or rstatus #x4000))(nop))
+    (set rDCD l_sum)))
+)
+(define-insn
+  (name abs)
+  (comment "Absolute: rD=abs(rT)")
+  (syntax "abs $rDCD $rT")
+  (format (+ FMT_C OPC_XOR EXT_FALSE rDCD (f-rS-C 0) rT))
+  (semantics
+   (sequence((SI l_sum))
+    (set l_sum (abs rT))
+    (set rstatus (and rstatus #x0FFF))
+    (if (eq l_sum 0)(set rstatus (or rstatus #x4000))(nop))
+    (if (neg rT)(set rstatus (or rstatus #x8000))(nop))
+    (set rDCD l_sum)))
+)
+(define-insn
+  (name copyto)
+  (comment "Copy value from gpr to alt-r")
+  (syntax "copyto $rAltC $rSC")
+  (format (+ FMT_C OPC_COPYTO rAltC rSC (f-rT 0)))
+  (semantics (set rAltC rSC))
+)
+(define-insn
+  (name copyfrom)
+  (comment "Copy value from alt-r to gpr")
+  (syntax "copyfrom $rAltC $rDCD")
+  (format (+ FMT_C OPC_COPYFROM rAltC (f-rS-C 0) rT))
+  (semantics (set rDCD rAltC))
+)
+(define-insn
+  (name lhr)
+  (comment "Load rD with data at address rS")
+  (syntax "lhr $rDCD $rSC")
+  (format (+ FMT_C OPC_LLOADH EXT_FALSE rDCD rSC (f-rT 0)))
+  (semantics (set rDCD (mem HI (ext USI rSC))))
+)
+(define-insn
+  (name lsr)
+  (comment "Store rT tp address rS")
+  (syntax "lhr $rSC $rT")
+  (format (+ FMT_C OPC_LSTOREH EXT_FALSE (f-rD-CD 0) rSC rT))
+  (semantics (set (mem HI (ext USI rSC)) rT))
+)
+(define-insn
+  (name getbitsi)
+  (comment "getBits immideate: getBits(q) rD,N - get N bits from stream and put into rD q - byte swallowing")
+  (syntax "gtbitsi $bitswallow $rDCD $N")
+  (format (+ FMT_D OPD_GETBITSi bitswallow rDCD (f-M-D 0) N))
+  (semantics (nop)) ; for now. Some day, when I get arround
+		    ;to defining bitstream this could be written
+)
+(define-insn
+  (name probebitsi)
+  (comment "probe bits immediate")
+  (syntax "probebitsi $rDCD $N")
+  (format (+ FMT_D OPD_PROBEBITS (f-q-D 0) rDCD (f-M-D 0) N))
+  (semantics (nop))
+)
+(define-insn
+  (name shiftstream)
+  (comment "shift bitstream left N bits")
+  (syntax "shiftstream $bitswallow $N")
+  (format (+ FMT_D OPD_SHIFTSTREAM bitswallow (f-rD-CD 0) (f-M-D 0) N))
+  (semantics (nop))
+)
+(define-insn
+  (name getbitsr)
+  (comment "get rT+1 bits (use bits 3-0 or rT)")
+  (syntax "getbitsr $bitswallow $rDCD $rT")
+  (format (+ FMT_D OPD_GETBITSr bitswallow rDCD (f-M-D 0) (f-M2-D 0) rT))
+  (semantics (nop))
+)
+(define-insn
+  (name genlookuppack)
+  (comment "")
+  (syntax "genlookuppack $rT")
+  (format (+ FMT_D OPD_GENERIC_LOOKUP_PACK (f-q-D 0)(f-rD-CD 0) (f-M-D 0) (f-M2-D 0) rT))
+  (semantics (nop))
+)
+(dni leafrunlevelparse "" () "leafrunlevelparse $bitswallow" 
+     (+ FMT_D OPD_LEAF_RUN_LEVEL_PARSE bitswallow (f-rD-CD 0) (f-M-D 0) (f-N-D 0))
+     (nop) ())
+(dni blockrunlevelparse "perform run-level lookup until hit the end of block" ()
+     "blockrunlevelparse $bitswallow" 
+     (+ FMT_D OPD_BLOCK_RUN_LEVEL_PARSE bitswallow (f-rD-CD 0) (f-M-D 0) (f-N-D 0))
+     (nop) ())
+(dni loadcodepackH261 "" () "loadcodepackH261 $bitswallow $p $imm"
+     (+ FMT_D OPD_LOAD_CODE_PACK_H261 bitswallow p imm)
+     (nop) ())
+(dni genericleafparse "perform generic table lookup, placing sign-extended 11bit value at leaf node in tbl_res alt-r"
+     () "genericleafparse" (+ FMT_D OPD_GENERIC_LEAF_PARSE (f-q-D 0) (f-p-D 0) (f-L-D 0) (f-N-D 0)) (nop) ())
+(dni blockrunsizeparse "JPEG run/level parse of block data" () "blockrunsizeparse $bitswallow"
+     (+ FMT_D OPD_BLOCK_RUN_SIZE_PARSE bitswallow (f-p-D 0) (f-L-D 0) (f-N-D 0)) (nop) ())
+(dni codesearch "q - byte alignment, p - byte insertion" () "codesearch $q $p"
+     (+ FMT_D OPD_CODE_SEARCH q p (f-L-D 0) (f-N-D 0)) (nop) ())
+(dni packbitstream "pack L left-justified bits in rT into bitstream" ()
+     "packbitstream $q $L $rT" (+ FMT_D OPD_PACK_BITSTREAM q (f-p-D 0) L (f-M2-D 0) rT) (nop) ())
+(dni loadcodepack "" () "loadcodepack $q $p $imm"
+     (+ FMT_D OPD_LOAD_CODE_PACK q p imm) (nop) ())
+(dni bytealign "make bitstream buffer byte aligned. fill with data from cmp_h" ()
+     "bytealign" (+ FMT_D OPD_BYTE_ALIGN (f-q-D 0) (f-p-D 0) (f-imm 0)) (nop) ())

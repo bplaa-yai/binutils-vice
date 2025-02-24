@@ -277,6 +277,10 @@ case "${targ}" in
     targ_defvec=bfd_elf32_avr_vec
     ;;
 
+  bsp-*-*)
+    targ_defvec=bsp_aout_vec
+    ;;
+
   c30-*-*aout* | tic30-*-*aout*)
     targ_defvec=tic30_aout_vec
     ;;

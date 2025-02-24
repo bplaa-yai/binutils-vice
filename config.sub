@@ -1064,6 +1064,10 @@ case $basic_machine in
 	pmac | pmac-mpw)
 		basic_machine=powerpc-apple
 		;;
+	bsp*)
+		basic_machine=bsp-sgi
+		os=-none
+		;;
 	*-unknown)
 		# Make sure to match an already-canonicalized machine name.
 		;;

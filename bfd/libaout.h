@@ -287,6 +287,8 @@ enum machine_type {
   M_NS32032 = (64),	/* ns32032 running ? */
   M_NS32532 = (64 + 5),	/* ns32532 running mach */
 
+  M_BSP = 70,		/* SGI O2 VICE BSP Engine. */
+
   M_386 = 100,
   M_29K = 101,          /* AMD 29000 */
   M_386_DYNIX = 102,	/* Sequent running dynix */

@@ -1638,6 +1638,7 @@ enum bfd_architecture
 #define bfd_mach_h8300hn  4
 #define bfd_mach_h8300sn  5
   bfd_arch_pdp11,     /* DEC PDP-11 */
+  bfd_arch_bsp,       /* SGI O2 VICE BSP */
   bfd_arch_powerpc,   /* PowerPC */
 #define bfd_mach_ppc           32
 #define bfd_mach_ppc64         64

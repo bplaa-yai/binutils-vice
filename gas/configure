@@ -2414,6 +2414,8 @@ for this_target in $target $canon_targets ; do
 
       avr-*-*)				fmt=elf ;;
 
+      bsp-*-*)				fmt=aout ;;
+
       cris-*-*)				fmt=multi bfd_gas=yes ;;
 
       d10v-*-*)				fmt=elf ;;
@@ -2729,7 +2731,7 @@ EOF
     fi
 
     case ${cpu_type}-${fmt} in
-	alpha*-* | arm-* | i386-* | ia64*-* | mips-* | ns32k-* \
+	alpha*-* | arm-* | bsp-* | i386-* | ia64*-* | mips-* | ns32k-* \
 		| pdp11-* | ppc-* | sparc-* | strongarm-* | xscale-* \
 		| *-elf | *-ecoff | *-som)
 	    bfd_gas=yes ;;
@@ -2849,6 +2851,9 @@ EOF
 
       frv)
 	using_cgen=yes
+	;;
+      bsp)
+  using_cgen=yes
 	;;
       m68k)
 	case ${extra_objects} in
