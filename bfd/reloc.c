@@ -3892,6 +3892,10 @@ ENUMDOC
   assembler-expanded instructions.  This is commonly used 
   internally by the linker after analysis of a 
   BFD_RELOC_XTENSA_ASM_EXPAND.
+ENUM
+  BFD_RELOC_BSP_LABEL16
+ENUMDOC
+  SGI O2 Vice BSP relocations for PC relative labels
 
 ENDSENUM
   BFD_RELOC_UNUSED
