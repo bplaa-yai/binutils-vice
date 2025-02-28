@@ -3045,7 +3045,7 @@ macro_build (place, counter, ep, name, fmt, va_alist)
 
 	case 'd':
 	case 'G':
-	case 'K':
+	case 'g':
 	  insn.insn_opcode |= va_arg (args, int) << OP_SH_RD;
 	  continue;
 
@@ -8537,8 +8537,9 @@ validate_mips_insn (opc)
       case 'H': USE_BITS (OP_MASK_SEL,		OP_SH_SEL);	break;
       case 'I': break;
       case 'J': USE_BITS (OP_MASK_CODE19,       OP_SH_CODE19);  break;
-      case 'K':	USE_BITS (OP_MASK_RD,		OP_SH_RD);	break;
-      case 'L': break;
+      case 'K':	USE_BITS (OP_MASK_VSEL,		OP_SH_VSEL);
+		USE_BITS (OP_MASK_FT,		OP_SH_FT);	break;
+	  case 'L': break;
       case 'M':	USE_BITS (OP_MASK_CCC,		OP_SH_CCC);	break;
       case 'N':	USE_BITS (OP_MASK_BCC,		OP_SH_BCC);	break;
       case 'O':	USE_BITS (OP_MASK_ALN,		OP_SH_ALN);	break;
@@ -8557,11 +8558,16 @@ validate_mips_insn (opc)
       case 'c':	USE_BITS (OP_MASK_CODE,		OP_SH_CODE);	break;
       case 'd':	USE_BITS (OP_MASK_RD,		OP_SH_RD);	break;
       case 'f': break;
+	  case 'g':	USE_BITS (OP_MASK_RD,		OP_SH_RD);	break;
       case 'h':	USE_BITS (OP_MASK_PREFX,	OP_SH_PREFX);	break;
       case 'i':	USE_BITS (OP_MASK_IMMEDIATE,	OP_SH_IMMEDIATE); break;
       case 'j':	USE_BITS (OP_MASK_DELTA,	OP_SH_DELTA);	break;
       case 'k':	USE_BITS (OP_MASK_CACHE,	OP_SH_CACHE);	break;
       case 'l': break;
+      case 'm': USE_BITS (OP_MASK_LOWVSEL,	OP_SH_LOWVSEL);
+		USE_BITS (OP_MASK_FS,		OP_SH_FS);	break;
+      case 'n': USE_BITS (OP_MASK_LOWVSEL,	OP_SH_LOWVSEL);
+		USE_BITS (OP_MASK_FT,		OP_SH_FT);	break;
       case 'o': USE_BITS (OP_MASK_DELTA,	OP_SH_DELTA);	break;
       case 'p':	USE_BITS (OP_MASK_DELTA,	OP_SH_DELTA);	break;
       case 'q':	USE_BITS (OP_MASK_CODE2,	OP_SH_CODE2);	break;
@@ -9002,7 +9008,7 @@ mips_ip (str, ip)
 	    case 'w':		/* both dest and target */
 	    case 'E':		/* coprocessor target register */
 	    case 'G':		/* coprocessor destination register */
-	    case 'K':		/* 'rdhwr' destination register */
+	    case 'g':		/* 'rdhwr' destination register */
 	    case 'x':		/* ignore register name */
 	    case 'z':		/* must be zero register */
 	    case 'U':           /* destination register (clo/clz).  */
@@ -9129,7 +9135,7 @@ mips_ip (str, ip)
 		      break;
 		    case 'd':
 		    case 'G':
-		    case 'K':
+		    case 'g':
 		      ip->insn_opcode |= regno << OP_SH_RD;
 		      break;
 		    case 'U':
@@ -9215,6 +9221,9 @@ mips_ip (str, ip)
 		  continue;
 		}
 	      /* Not MDMX Immediate.  Fall through.  */
+	    case 'K':           /* MSP vector or element.  */
+	    case 'm':           /* MSP MFC2/MTC2 source register.  */
+	    case 'n':           /* MSP LWC2/SWC2 dest register.  */
 	    case 'X':           /* MDMX destination register.  */
 	    case 'Y':           /* MDMX source register.  */
 	    case 'Z':           /* MDMX target register.  */
@@ -9245,7 +9254,7 @@ mips_ip (str, ip)
 		  if (regno > 31)
 		    as_bad (_("Invalid float register number (%d)"), regno);
 
-		  if ((regno & 1) != 0
+		  if (((regno & 1) != 0 && !is_mdmx)
 		      && HAVE_32BIT_FPRS
 		      && ! (strcmp (str, "mtc1") == 0
 			    || strcmp (str, "mfc1") == 0
@@ -9273,6 +9282,73 @@ mips_ip (str, ip)
 		    case 'D':
 		    case 'X':
 		      ip->insn_opcode |= regno << OP_SH_FD;
+		      break;
+            case 'm':
+            case 'n':
+		      /* Need to fix the MSP low vector/scalar select bits. */
+		      if (*s == '[')
+			{
+			  int max_el = 15;
+			  s++;
+			  my_getExpression(&imm_expr, s);
+			  check_absolute_expr (ip, &imm_expr);
+                          imm_expr.X_op = O_absent;
+			  s = expr_end;
+			  if (imm_expr.X_add_number > max_el)
+			    as_bad(_("Bad element selector %ld"),
+				   (long) imm_expr.X_add_number);
+			  imm_expr.X_add_number &= max_el;
+			  ip->insn_opcode |= ((imm_expr.X_add_number)
+					      << OP_SH_LOWVSEL);
+			  if (*s != ']')
+			    as_warn(_("Expecting ']' found '%s'"), s);
+			  else
+			    s++;
+			}
+                      if(c == 'm')
+                        ip->insn_opcode |= regno << OP_SH_FS;
+                      if(c == 'n')
+                        ip->insn_opcode |= regno << OP_SH_FT;
+		      break;
+		    case 'K':
+		      /* Need to fix the MSP high vector/scalar select bits. */
+                      if (*s == '[')
+			{
+			  int max_el;
+			  s++;
+			  my_getExpression(&imm_expr, s);
+			  check_absolute_expr (ip, &imm_expr);
+                          imm_expr.X_op = O_absent;
+			  s = expr_end;
+                          if(*s == 'q') {
+                            /* quarter select */
+                            max_el = 1; s++; 
+                            ip->insn_opcode |= 0x2 << OP_SH_VSEL;
+                          }
+                          else if(*s == 'h') {
+                            /* half select */
+                            max_el = 3; s++;
+                            ip->insn_opcode |= 0x4 << OP_SH_VSEL;
+                          } else {
+                            /* scalar select */
+                            max_el = 7; 
+                            ip->insn_opcode |= 0x8 << OP_SH_VSEL;
+                          }
+			  if (*s != ']') {
+			    as_warn(_("Expecting ']' found '%s'"), s);
+                          }
+			  else {
+			    s++;
+                          }
+
+			  if (imm_expr.X_add_number > max_el)
+			    as_bad(_("Bad element selector %ld"),
+				   (long) imm_expr.X_add_number);
+			  imm_expr.X_add_number &= max_el;
+			  ip->insn_opcode |= imm_expr.X_add_number
+					      << OP_SH_VSEL;
+			}
+		      ip->insn_opcode |= regno << OP_SH_FT;
 		      break;
 		    case 'V':
 		    case 'S':

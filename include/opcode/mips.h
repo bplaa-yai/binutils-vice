@@ -137,6 +137,8 @@ Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  *
 #define OP_MASK_ALN		0x7
 #define OP_SH_VSEL		21
 #define OP_MASK_VSEL		0x1f
+#define OP_SH_LOWVSEL		7       /* The vsel field of {mf/mt/lw/sw}c2 */
+#define OP_MASK_LOWVSEL	   0xf
 #define OP_MASK_VECBYTE		0x7	/* Selector field is really 4 bits,
 					   but 0x8-0xf don't select bytes.  */
 #define OP_SH_VECBYTE		22
@@ -232,7 +234,7 @@ struct mips_opcode
    "J" 19 bit wait function code (OP_*_CODE19)
    "x" accept and ignore register name
    "z" must be zero register
-   "K" 5 bit Hardware Register (rdhwr instruction) (OP_*_RD)
+   "g" 5 bit Hardware Register (rdhwr instruction) (OP_*_RD)
    "+A" 5 bit ins/ext position, which becomes LSB (OP_*_SHAMT).
 	Enforces: 0 <= pos < 32.
    "+B" 5 bit ins size, which becomes MSB (OP_*_INSMSB).
@@ -279,6 +281,11 @@ struct mips_opcode
    "Y"	MDMX source register (OP_*_FS)
    "Z"	MDMX source register (OP_*_FT)
 
+   VICE MSP/Nintendo64 RCP instruction operands
+   "m" vector source for MFC2/MTC2 operations (OP_*_LOWVSEL and OP_*_FS)
+   "n" vector dest for LWC2/SWC2 operations (OP_*_LOWVSEL and OP_*_FT)
+   "K" vector/scalar/immediate source (OP_*_VSEL and OP_*_FT)
+
    Other:
    "()" parens surrounding optional value
    ","  separates operands
@@ -288,7 +295,7 @@ struct mips_opcode
    Characters used so far, for quick reference when adding more:
    "%[]<>(),+"
    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-   "abcdefhijklopqrstuvwxz"
+   "abcdefghijklmnopqrstuvwxz"
 
    Extension character sequences used so far ("+" followed by the
    following), for quick reference when adding more:

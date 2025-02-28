@@ -912,7 +912,7 @@ print_insn_args (d, l, pc, info)
 				   (l >> OP_SH_RD) & OP_MASK_RD);
 	  break;
 
-	case 'K':
+	case 'g':
 	  (*info->fprintf_func) (info->stream, "%s",
 				 mips_hwr_names[(l >> OP_SH_RD) & OP_MASK_RD]);
 	  break;
@@ -951,6 +951,47 @@ print_insn_args (d, l, pc, info)
 	  (*info->fprintf_func) (info->stream, "%d",
 				 (l >> OP_SH_ALN) & OP_MASK_ALN);
 	  break;
+
+	case 'm':
+	case 'n':
+	{
+		unsigned int vsel = (l >> OP_SH_LOWVSEL) & OP_MASK_LOWVSEL;
+
+		(*info->fprintf_func)(info->stream, "$v%d[%d]",
+							  (l >> OP_SH_FS) & OP_MASK_FS,
+							  vsel);
+	}
+	break;
+
+	case 'K':
+	{
+		unsigned int vsel = (l >> OP_SH_LOWVSEL) & OP_MASK_LOWVSEL;
+
+		if (vsel)
+		{
+			if (vsel & 8)
+				(*info->fprintf_func)(info->stream, "$v%d[%d]",
+									  (l >> OP_SH_FS) & OP_MASK_FS,
+									  vsel & 7);
+			else if (vsel & 4)
+				(*info->fprintf_func)(info->stream, "$v%d[%dh]",
+									  (l >> OP_SH_FS) & OP_MASK_FS,
+									  vsel & 3);
+			else if (vsel & 2)
+				(*info->fprintf_func)(info->stream, "$v%d[%dq]",
+									  (l >> OP_SH_FS) & OP_MASK_FS,
+									  vsel & 1);
+			else if (vsel & 1)
+				(*info->fprintf_func)(info->stream, "$v%d[?]", /* unknown code */
+									  (l >> OP_SH_FS) & OP_MASK_FS);
+		}
+		else
+		{
+			(*info->fprintf_func)(info->stream, "$v%d",
+								  (l >> OP_SH_FS) & OP_MASK_FS);
+		}
+	}
+	break;
 
 	case 'Q':
 	  {
