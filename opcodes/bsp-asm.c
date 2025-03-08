@@ -104,6 +104,9 @@ bsp_cgen_parse_operand (cd, opindex, strp, fields)
     case BSP_OPERAND_RALTC :
       errmsg = cgen_parse_keyword (cd, strp, & bsp_cgen_opval_h_altr, & fields->f_rALT_C);
       break;
+    case BSP_OPERAND_RALTEXTC :
+      errmsg = cgen_parse_keyword (cd, strp, & bsp_cgen_opval_h_altr, & fields->f_rALT_ext_C);
+      break;
     case BSP_OPERAND_RDCD :
       errmsg = cgen_parse_keyword (cd, strp, & bsp_cgen_opval_h_gpr, & fields->f_rD_CD);
       break;

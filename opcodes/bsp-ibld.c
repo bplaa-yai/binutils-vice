@@ -593,6 +593,11 @@ bsp_cgen_insert_operand (cd, opindex, fields, buffer, pc)
     case BSP_OPERAND_RALTC :
       errmsg = insert_normal (cd, fields->f_rALT_C, 0, 0, 9, 4, 16, total_length, buffer);
       break;
+    case BSP_OPERAND_RALTEXTC :
+      if (fields->f_rALT_ext_C & 0x8)
+        errmsg = insert_normal (cd, fields->f_rALT_ext_C >> 3, 0, 0, 9, 1, 16, total_length, buffer);
+      errmsg = insert_normal (cd, fields->f_rALT_ext_C & 0x7, 0, 0, 5, 3, 16, total_length, buffer);
+      break;
     case BSP_OPERAND_RDCD :
       errmsg = insert_normal (cd, fields->f_rD_CD, 0, 0, 8, 3, 16, total_length, buffer);
       break;
@@ -678,6 +683,10 @@ bsp_cgen_extract_operand (cd, opindex, ex_info, insn_value, fields, pc)
     case BSP_OPERAND_RALTC :
       length = extract_normal (cd, ex_info, insn_value, 0, 0, 9, 4, 16, total_length, pc, & fields->f_rALT_C);
       break;
+    case BSP_OPERAND_RALTEXTC :
+      length = extract_normal (cd, ex_info, insn_value, 0, 0, 5, 3, 16, total_length, pc, & fields->f_rALT_ext_C);
+      length = extract_normal (cd, ex_info, insn_value, 0, 0, 9, 1, 16, total_length, pc, & fields->f_ext_C);
+      break;
     case BSP_OPERAND_RDCD :
       length = extract_normal (cd, ex_info, insn_value, 0, 0, 8, 3, 16, total_length, pc, & fields->f_rD_CD);
       break;
@@ -760,6 +769,9 @@ bsp_cgen_get_int_operand (cd, opindex, fields)
     case BSP_OPERAND_RALTC :
       value = fields->f_rALT_C;
       break;
+    case BSP_OPERAND_RALTEXTC :
+      value = fields->f_rALT_ext_C | (fields->f_ext_C << 3);
+      break;
     case BSP_OPERAND_RDCD :
       value = fields->f_rD_CD;
       break;
@@ -816,6 +828,9 @@ bsp_cgen_get_vma_operand (cd, opindex, fields)
       break;
     case BSP_OPERAND_RALTC :
       value = fields->f_rALT_C;
+      break;
+    case BSP_OPERAND_RALTEXTC :
+      value = fields->f_rALT_ext_C | (fields->f_ext_C << 3);
       break;
     case BSP_OPERAND_RDCD :
       value = fields->f_rD_CD;
@@ -883,6 +898,10 @@ bsp_cgen_set_int_operand (cd, opindex, fields, value)
     case BSP_OPERAND_RALTC :
       fields->f_rALT_C = value;
       break;
+    case BSP_OPERAND_RALTEXTC :
+      fields->f_rALT_ext_C = value & 0x7;
+      fields->f_ext_C = value >> 3;
+      break;
     case BSP_OPERAND_RDCD :
       fields->f_rD_CD = value;
       break;
@@ -936,6 +955,10 @@ bsp_cgen_set_vma_operand (cd, opindex, fields, value)
       break;
     case BSP_OPERAND_RALTC :
       fields->f_rALT_C = value;
+      break;
+    case BSP_OPERAND_RALTEXTC :
+      fields->f_rALT_ext_C = value & 0x7;
+      fields->f_ext_C = value >> 3;
       break;
     case BSP_OPERAND_RDCD :
       fields->f_rD_CD = value;

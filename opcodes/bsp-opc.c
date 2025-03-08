@@ -81,7 +81,7 @@ static const CGEN_IFMT ifmt_copyto = {
 };
 
 static const CGEN_IFMT ifmt_copyfrom = {
-  16, 16, 0xfc38, { { F (F_IFORMAT) }, { F (F_OPCODE_CD) }, { F (F_RALT_C) }, { F (F_RS_C) }, { F (F_RT) }, { 0 } }
+  16, 16, 0xfc07, { { F (F_IFORMAT) }, { F (F_OPCODE_CD) }, { F (F_RD_CD) }, { F (F_RALT_EXT_C) }, { F (F_RT) }, { 0 } }
 };
 
 static const CGEN_IFMT ifmt_llh = {
@@ -422,7 +422,7 @@ static const CGEN_OPCODE bsp_cgen_insn_opcode_table[MAX_INSNS] =
 /* copyfrom $rAltC $rDCD */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RALTC), ' ', OP (RDCD), 0 } },
+    { { MNEM, ' ', OP (RDCD), ' ', OP (RALTEXTC), 0 } },
     & ifmt_copyfrom, { 0x7400 }
   },
 /* llh $rDCD $rSC */

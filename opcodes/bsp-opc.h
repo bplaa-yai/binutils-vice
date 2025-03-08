@@ -75,6 +75,7 @@ struct cgen_fields
   long f_rD_CD;
   long f_rALT_C;
   long f_ext_C;
+  long f_rALT_ext_C;
   long f_rS_C;
   long f_q_D;
   long f_p_D;

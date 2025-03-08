@@ -120,6 +120,9 @@ bsp_cgen_print_operand (cd, opindex, xinfo, fields, attrs, pc, length)
     case BSP_OPERAND_RALTC :
       print_keyword (cd, info, & bsp_cgen_opval_h_altr, fields->f_rALT_C, 0);
       break;
+    case BSP_OPERAND_RALTEXTC :
+      print_keyword (cd, info, & bsp_cgen_opval_h_altr, fields->f_rALT_ext_C | (fields->f_ext_C << 3), 0);
+      break;
     case BSP_OPERAND_RDCD :
       print_keyword (cd, info, & bsp_cgen_opval_h_gpr, fields->f_rD_CD, 0);
       break;

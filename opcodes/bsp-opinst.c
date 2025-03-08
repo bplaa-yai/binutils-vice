@@ -187,7 +187,7 @@ static const CGEN_OPINST sfmt_copyto_ops[] = {
 };
 
 static const CGEN_OPINST sfmt_copyfrom_ops[] = {
-  { INPUT, "rAltC", HW_H_ALTR, CGEN_MODE_UINT, OP_ENT (RALTC), 0, 0 },
+  { INPUT, "rAltExtC", HW_H_ALTR, CGEN_MODE_UINT, OP_ENT (RALTEXTC), 0, 0 },
   { OUTPUT, "rDCD", HW_H_GPR, CGEN_MODE_UINT, OP_ENT (RDCD), 0, 0 },
   { END }
 };
