@@ -232,7 +232,7 @@ const CGEN_IFLD bsp_cgen_ifld_table[] =
   { BSP_F_RT, "f-rT", 0, 16, 2, 3, { 0, { (1<<MACH_BASE) } }  },
   { BSP_F_IGNORE_C, "f-ignore-C", 0, 16, 7, 5, { 0, { (1<<MACH_BASE) } }  },
   { BSP_F_RD_CD, "f-rD-CD", 0, 16, 8, 3, { 0, { (1<<MACH_BASE) } }  },
-  { BSP_F_RALT_C, "f-rALT-C", 0, 16, 10, 4, { 0, { (1<<MACH_BASE) } }  },
+  { BSP_F_RALT_C, "f-rALT-C", 0, 16, 9, 4, { 0, { (1<<MACH_BASE) } }  },
   { BSP_F_EXT_C, "f-ext-C", 0, 16, 9, 1, { 0, { (1<<MACH_BASE) } }  },
   { BSP_F_RS_C, "f-rS-C", 0, 16, 5, 3, { 0, { (1<<MACH_BASE) } }  },
   { BSP_F_Q_D, "f-q-D", 0, 16, 9, 1, { 0, { (1<<MACH_BASE) } }  },
@@ -292,7 +292,7 @@ const CGEN_OPERAND bsp_cgen_operand_table[] =
     { 0, { (const PTR) &bsp_cgen_ifld_table[9] } }, 
     { 0, { (1<<MACH_BASE) } }  },
 /* rAltC: Destination AltR for format C insns */
-  { "rAltC", BSP_OPERAND_RALTC, HW_H_ALTR, 10, 4,
+  { "rAltC", BSP_OPERAND_RALTC, HW_H_ALTR, 9, 4,
     { 0, { (const PTR) &bsp_cgen_ifld_table[10] } }, 
     { 0, { (1<<MACH_BASE) } }  },
 /* rSC: Source GPR for format C insns */
