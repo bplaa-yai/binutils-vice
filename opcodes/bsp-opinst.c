@@ -157,6 +157,14 @@ static const CGEN_OPINST sfmt_add_ops[] = {
   { END }
 };
 
+static const CGEN_OPINST sfmt_cmp_ops[] = {
+  { INPUT, "rSC", HW_H_GPR, CGEN_MODE_UINT, OP_ENT (RSC), 0, 0 },
+  { INPUT, "rT", HW_H_GPR, CGEN_MODE_UINT, OP_ENT (RT), 0, 0 },
+  { INPUT, "rstatus", HW_H_ALTR, CGEN_MODE_UINT, 0, 0, 0 },
+  { OUTPUT, "rstatus", HW_H_ALTR, CGEN_MODE_UINT, 0, 0, 0 },
+  { END }
+};
+
 static const CGEN_OPINST sfmt_sll_ops[] = {
   { INPUT, "rSC", HW_H_GPR, CGEN_MODE_UINT, OP_ENT (RSC), 0, 0 },
   { INPUT, "rT", HW_H_GPR, CGEN_MODE_UINT, OP_ENT (RT), 0, 0 },
@@ -250,6 +258,7 @@ static const CGEN_OPINST *bsp_cgen_opinst_table[MAX_INSNS] = {
   & sfmt_add_ops[0],
   & sfmt_add_ops[0],
   & sfmt_add_ops[0],
+  & sfmt_cmp_ops[0],
   & sfmt_add_ops[0],
   & sfmt_add_ops[0],
   & sfmt_sll_ops[0],

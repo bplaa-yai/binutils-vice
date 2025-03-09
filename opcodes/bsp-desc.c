@@ -530,6 +530,11 @@ static const CGEN_IBASE bsp_cgen_insn_table[MAX_INSNS] =
     BSP_INSN_SUBC, "subc", "subc", 16,
     { 0, { (1<<MACH_BASE) } }
   },
+/* cmp $rSC $rT */
+  {
+    BSP_INSN_CMP, "cmp", "cmp", 16,
+    { 0, { (1<<MACH_BASE) } }
+  },
 /* and $rDCD $rSC $rT */
   {
     BSP_INSN_AND, "and", "and", 16,

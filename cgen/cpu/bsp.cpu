@@ -660,6 +660,17 @@
     (set rDCD l_sum)))
 )
 (define-insn
+  (name cmp)
+  (comment "Dyadic compare")
+  (syntax "cmp $rSC $rT")
+  (format (+ FMT_C OPC_CMP EXT_FALSE rDCD rSC rT))
+  (semantics
+   (sequence ()
+     (set rstatus (and rstatus #x0FFF))
+     (if (lt rSC rT) (set rstatus (or rstatus #x8000)) (nop))
+     (if (eq rSC rT) (set rstatus (or rstatus #x4000)) (nop))))
+)
+(define-insn
   (name and)
   (comment "Tradic bitwise and: rD=rS&rT")
   (syntax "and $rDCD $rSC $rT")
@@ -744,9 +755,9 @@
 (define-insn
   (name copyfrom)
   (comment "Copy value from alt-r to gpr")
-  (syntax "copyfrom $rAltC $rDCD")
-  (format (+ FMT_C OPC_COPYFROM rAltC (f-rS-C 0) rT))
-  (semantics (set rDCD rAltC))
+  (syntax "copyfrom $rDCD $rAltExtC")
+  (format (+ FMT_C OPC_COPYFROM rDCD rAltExtC (f-rT 0)))
+  (semantics (set rDCD rAltExtC))
 )
 (define-insn
   (name llh)

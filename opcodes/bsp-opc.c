@@ -72,6 +72,10 @@ static const CGEN_IFMT ifmt_add = {
   16, 16, 0xfe00, { { F (F_IFORMAT) }, { F (F_OPCODE_CD) }, { F (F_EXT_C) }, { F (F_RD_CD) }, { F (F_RS_C) }, { F (F_RT) }, { 0 } }
 };
 
+static const CGEN_IFMT ifmt_cmp = {
+  16, 16, 0xffc0, { { F (F_IFORMAT) }, { F (F_OPCODE_CD) }, { F (F_RS_C) }, { F (F_RT) }, { 0 } }
+};
+
 static const CGEN_IFMT ifmt_abs = {
   16, 16, 0xfe38, { { F (F_IFORMAT) }, { F (F_OPCODE_CD) }, { F (F_EXT_C) }, { F (F_RD_CD) }, { F (F_RS_C) }, { F (F_RT) }, { 0 } }
 };
@@ -370,6 +374,12 @@ static const CGEN_OPCODE bsp_cgen_insn_opcode_table[MAX_INSNS] =
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RDCD), ' ', OP (RSC), ' ', OP (RT), 0 } },
     & ifmt_add, { 0x4200 }
+  },
+/* cmp $rSC $rT */
+  {
+    { 0, 0, 0, 0 },
+    { { MNEM, ' ', OP (RSC), ' ', OP (RT), 0 } },
+    & ifmt_cmp, { 0x4800 }
   },
 /* and $rDCD $rSC $rT */
   {
