@@ -762,13 +762,13 @@
 (define-insn
   (name llh)
   (comment "Load rD with data at address rS")
-  (syntax "llh $rDCD $rSC")
-  (format (+ FMT_C OPC_LLOADH EXT_FALSE rDCD rSC (f-rT 0)))
-  (semantics (set rDCD (mem HI (ext USI rSC))))
+  (syntax "llh $rDCD $rT")
+  (format (+ FMT_C OPC_LLOADH EXT_FALSE rDCD (f-rS-C 0) rT))
+  (semantics (set rDCD (mem HI (ext USI rT))))
 )
 (define-insn
   (name lsh)
-  (comment "Store rT tp address rS")
+  (comment "Store rT to address rS")
   (syntax "lsh $rSC $rT")
   (format (+ FMT_C OPC_LSTOREH EXT_FALSE (f-rD-CD 0) rSC rT))
   (semantics (set (mem HI (ext USI rSC)) rT))
