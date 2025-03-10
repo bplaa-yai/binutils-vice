@@ -295,7 +295,7 @@ static const CGEN_OPCODE bsp_cgen_insn_opcode_table[MAX_INSNS] =
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RT), 0 } },
-    & ifmt_jr, { 0x3600 }
+    & ifmt_jr, { 0x3700 }
   },
 /* jreq $rT */
   {
@@ -367,13 +367,13 @@ static const CGEN_OPCODE bsp_cgen_insn_opcode_table[MAX_INSNS] =
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RDCD), ' ', OP (RSC), ' ', OP (RT), 0 } },
-    & ifmt_add, { 0x4000 }
+    & ifmt_add, { 0x4400 }
   },
 /* subc $rDCD $rSC $rT */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RDCD), ' ', OP (RSC), ' ', OP (RT), 0 } },
-    & ifmt_add, { 0x4200 }
+    & ifmt_add, { 0x4600 }
   },
 /* cmp $rSC $rT */
   {
