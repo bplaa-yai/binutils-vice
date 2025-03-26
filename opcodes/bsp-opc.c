@@ -317,31 +317,31 @@ static const CGEN_OPCODE bsp_cgen_insn_opcode_table[MAX_INSNS] =
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RT), 0 } },
-    & ifmt_jr, { 0x3100 }
+    & ifmt_jr, { 0x3200 }
   },
 /* jrge $rT */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RT), 0 } },
-    & ifmt_jr, { 0x3200 }
+    & ifmt_jr, { 0x3300 }
   },
 /* jrext0 $rT */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RT), 0 } },
-    & ifmt_jr, { 0x3300 }
+    & ifmt_jr, { 0x3400 }
   },
 /* jrext1 $rT */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RT), 0 } },
-    & ifmt_jr, { 0x3400 }
+    & ifmt_jr, { 0x3500 }
   },
 /* jrext2 $rT */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RT), 0 } },
-    & ifmt_jr, { 0x3500 }
+    & ifmt_jr, { 0x3600 }
   },
 /* break */
   {
