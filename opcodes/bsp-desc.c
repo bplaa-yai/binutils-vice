@@ -472,7 +472,7 @@ static const CGEN_IBASE bsp_cgen_insn_table[MAX_INSNS] =
   },
 /* jreq $rT */
   {
-    BSP_INSN_JRNEN, "jrnen", "jreq", 16,
+    BSP_INSN_JRNE, "jrne", "jrne", 16,
     { 0|A(COND_CTI)|A(DELAY_SLOT), { (1<<MACH_BASE) } }
   },
 /* jrge $rT */
@@ -482,7 +482,7 @@ static const CGEN_IBASE bsp_cgen_insn_table[MAX_INSNS] =
   },
 /* jrge $rT */
   {
-    BSP_INSN_JRLT, "jrlt", "jrge", 16,
+    BSP_INSN_JRLT, "jrlt", "jrlt", 16,
     { 0|A(COND_CTI)|A(DELAY_SLOT), { (1<<MACH_BASE) } }
   },
 /* jrext0 $rT */
