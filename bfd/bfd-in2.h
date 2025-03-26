@@ -3479,6 +3479,8 @@ BFD_RELOC_XTENSA_ASM_EXPAND.  */
 
 /* SGI O2 Vice BSP relocations for PC relative labels */
   BFD_RELOC_BSP_LABEL16,
+/* SGI O2 Vice BSP relocations absolute labels */
+  BFD_RELOC_BSP_LABEL32,
 
   BFD_RELOC_UNUSED };
 typedef enum bfd_reloc_code_real bfd_reloc_code_real_type;

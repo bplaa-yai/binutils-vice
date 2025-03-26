@@ -51,13 +51,14 @@ typedef enum cgen_insn_type {
  , BSP_INSN_SHIFTSTREAM, BSP_INSN_GETBITSR, BSP_INSN_GENLOOKUPPACK, BSP_INSN_LEAFRUNLEVELPARSE
  , BSP_INSN_BLOCKRUNLEVELPARSE, BSP_INSN_LOADCODEPACKH261, BSP_INSN_GENERICLEAFPARSE, BSP_INSN_BLOCKRUNSIZEPARSE
  , BSP_INSN_CODESEARCH, BSP_INSN_PACKBITSTREAM, BSP_INSN_LOADCODEPACK, BSP_INSN_BYTEALIGN
+ , BSP_INSN_LA, BSP_INSN_MAX
 } CGEN_INSN_TYPE;
 
 /* Index of `invalid' insn place holder.  */
 #define CGEN_INSN_INVALID BSP_INSN_INVALID
 
 /* Total number of insns in table.  */
-#define MAX_INSNS ((int) BSP_INSN_BYTEALIGN + 1)
+#define MAX_INSNS ((int) BSP_INSN_MAX)
 
 /* This struct records data prior to insertion or after extraction.  */
 struct cgen_fields

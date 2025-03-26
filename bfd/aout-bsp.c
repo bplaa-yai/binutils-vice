@@ -398,6 +398,7 @@ reloc_howto_type howto_table_bsp[] =
   /* type              rs size bsz  pcrel bitpos ovrf                     sf name     part_inpl readmask  setmask    pcdone */
 HOWTO( 0,	       0,  1,  16,  FALSE, 0, complain_overflow_signed,0,"16",	TRUE, 0x0000ffff,0x0000ffff, FALSE),
 HOWTO( 1,	       0,  1,  16,  TRUE,  0, complain_overflow_signed,0,"DISP16",	TRUE, 0x0000ffff,0x0000ffff, FALSE),
+HOWTO( 2,	       0,  1,  16,  FALSE,  0, complain_overflow_signed,0,"ABS16",	FALSE, 0x00000000,0x00000000, FALSE),
 };
 
 #define TABLE_SIZE(TABLE)	(sizeof(TABLE)/sizeof(TABLE[0]))
@@ -413,6 +414,8 @@ NAME(aout,reloc_type_lookup) (abfd,code)
       return &howto_table_bsp[0];
     case BFD_RELOC_16_PCREL:
       return &howto_table_bsp[1];
+    case BFD_RELOC_BSP_LABEL32:
+      return &howto_table_bsp[2];
     default:
       return (reloc_howto_type *)NULL;
     }

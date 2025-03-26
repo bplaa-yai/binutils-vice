@@ -297,15 +297,15 @@ put_insn_int_value (cd, buf, length, insn_length, value)
 {
   /* For architectures with insns smaller than the base-insn-bitsize,
      length may be too big.  */
-  if (length > insn_length)
+  //if (length > insn_length)
     *buf = value;
-  else
-    {
-      int shift = insn_length - length;
-      /* Written this way to avoid undefined behaviour.  */
-      CGEN_INSN_INT mask = (((1L << (length - 1)) - 1) << 1) | 1;
-      *buf = (*buf & ~(mask << shift)) | ((value & mask) << shift);
-    }
+  //else
+  //  {
+  //    int shift = insn_length - length;
+  //    /* Written this way to avoid undefined behaviour.  */
+  //    CGEN_INSN_INT mask = (((1L << (length - 1)) - 1) << 1) | 1;
+  //    *buf = (*buf & ~(mask << shift)) | ((value & mask) << shift);
+  //  }
 }
 #endif
 
@@ -590,6 +590,10 @@ bsp_cgen_insert_operand (cd, opindex, fields, buffer, pc)
     case BSP_OPERAND_RAB :
       errmsg = insert_normal (cd, fields->f_gpr_cond_AB, 0, 0, 10, 3, 16, total_length, buffer);
       break;
+    case BSP_OPERAND_RAB32 :
+      errmsg = insert_normal (cd, fields->f_gpr_cond_AB, 0, 0, 10, 3, 16, total_length, buffer);
+      errmsg = insert_normal (cd, fields->f_gpr_cond_AB, 0, 16, 10, 3, 16, total_length, buffer);
+      break;
     case BSP_OPERAND_RALTC :
       errmsg = insert_normal (cd, fields->f_rALT_C, 0, 0, 9, 4, 16, total_length, buffer);
       break;
@@ -612,6 +616,12 @@ bsp_cgen_insert_operand (cd, opindex, fields, buffer, pc)
         long value = fields->f_label - 2; // delay slot
         value = (signed char) value >> 1;
         errmsg = insert_normal (cd, value, 0|(1<<CGEN_IFLD_SIGNED)|(1<<CGEN_IFLD_PCREL_ADDR), 0, 7, 8, 16, total_length, buffer);
+      }
+      break;
+    case BSP_OPERAND_LABEL32 :
+      {
+        errmsg = insert_normal (cd, fields->f_label & 0xff, 0|(1<<CGEN_IFLD_ABS_ADDR), 0, 7, 8, 16, total_length, buffer);
+        errmsg = insert_normal (cd, fields->f_label >> 8, 0|(1<<CGEN_IFLD_ABS_ADDR), 16, 7, 8, 16, total_length, buffer);
       }
       break;
 
@@ -970,6 +980,7 @@ bsp_cgen_set_vma_operand (cd, opindex, fields, value)
       fields->f_rT = value;
       break;
     case BSP_OPERAND_LABEL :
+    case BSP_OPERAND_LABEL32 :
       fields->f_label = value;
       break;
 

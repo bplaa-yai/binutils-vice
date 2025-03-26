@@ -99,6 +99,7 @@ bsp_cgen_parse_operand (cd, opindex, strp, fields)
       errmsg = cgen_parse_unsigned_integer (cd, strp, BSP_OPERAND_Q, &fields->f_q_D);
       break;
     case BSP_OPERAND_RAB :
+    case BSP_OPERAND_RAB32 :
       errmsg = cgen_parse_keyword (cd, strp, & bsp_cgen_opval_h_gpr, & fields->f_gpr_cond_AB);
       break;
     case BSP_OPERAND_RALTC :
@@ -117,9 +118,10 @@ bsp_cgen_parse_operand (cd, opindex, strp, fields)
       errmsg = cgen_parse_keyword (cd, strp, & bsp_cgen_opval_h_gpr, & fields->f_rT);
       break;
     case BSP_OPERAND_LABEL :
+    case BSP_OPERAND_LABEL32 :
       {
         bfd_vma value;
-        errmsg = cgen_parse_address (cd, strp, BSP_OPERAND_LABEL, 0, NULL,  & value);
+        errmsg = cgen_parse_address (cd, strp, opindex, 0, NULL,  & value);
         fields->f_label = value;
       }
       break;

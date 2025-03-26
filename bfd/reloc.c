@@ -3896,6 +3896,10 @@ ENUM
   BFD_RELOC_BSP_LABEL16
 ENUMDOC
   SGI O2 Vice BSP relocations for PC relative labels
+ENUM
+  BFD_RELOC_BSP_LABEL32
+ENUMDOC
+  SGI O2 Vice BSP relocations for absolute labels
 
 ENDSENUM
   BFD_RELOC_UNUSED

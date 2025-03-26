@@ -148,6 +148,10 @@ static const CGEN_IFMT ifmt_bytealign = {
   16, 16, 0xffff, { { F (F_IFORMAT) }, { F (F_OPCODE_CD) }, { F (F_Q_D) }, { F (F_P_D) }, { F (F_IMM) }, { 0 } }
 };
 
+static const CGEN_IFMT ifmt_la = {
+  32, 32, 0xf800f800, { { F (F_IFORMAT) }, { 0 } }
+};
+
 #undef F
 
 #if defined (__STDC__) || defined (ALMOST_STDC) || defined (HAVE_STRINGIZE)
@@ -530,6 +534,12 @@ static const CGEN_OPCODE bsp_cgen_insn_opcode_table[MAX_INSNS] =
     { 0, 0, 0, 0 },
     { { MNEM, 0 } },
     & ifmt_bytealign, { 0xf800 }
+  },
+/* la $label */
+  {
+    { 0, 0, 0, 0 },
+    { { MNEM, ' ', OP (RAB32), ' ', OP (LABEL32), 0 } },
+    & ifmt_la, { 0xb800b000 }
   },
 };
 

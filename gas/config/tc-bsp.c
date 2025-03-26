@@ -274,8 +274,10 @@ md_cgen_lookup_reloc (insn, operand, fixP)
   switch (operand->type)
     {
     case BSP_OPERAND_LABEL:
-      fixP->fx_pcrel = TRUE;
       return BFD_RELOC_BSP_LABEL16;
+
+    case BSP_OPERAND_LABEL32:
+      return BFD_RELOC_BSP_LABEL32;
 
     default: 
       break;

@@ -243,6 +243,7 @@ const CGEN_IFLD bsp_cgen_ifld_table[] =
   { BSP_F_M2_D, "f-M2-D", 0, 16, 3, 1, { 0, { (1<<MACH_BASE) } }  },
   { BSP_F_N_D, "f-N-D", 0, 16, 3, 4, { 0, { (1<<MACH_BASE) } }  },
   { BSP_F_LABEL, "f-label", 0, 16, 7, 8, { 0|A(PCREL_ADDR), { (1<<MACH_BASE) } }  },
+  { BSP_F_LABEL32, "f-label32", 0, 16, 7, 8, { 0|A(ABS_ADDR), { (1<<MACH_BASE) } }  },
   { 0, 0, 0, 0, 0, 0, {0, {0}} }
 };
 
@@ -332,10 +333,14 @@ const CGEN_OPERAND bsp_cgen_operand_table[] =
   { "L", BSP_OPERAND_L, HW_H_UINT, 7, 4,
     { 0, { (const PTR) &bsp_cgen_ifld_table[15] } }, 
     { 0, { (1<<MACH_BASE) } }  },
-/* label: 16 bit pc relative address */
+/* label: 8 bit pc relative address */
   { "label", BSP_OPERAND_LABEL, HW_H_UINT, 7, 8,
-    { 0, { (const PTR) &bsp_cgen_ifld_table[19] } }, 
+    { 0, { (const PTR) &bsp_cgen_ifld_table[BSP_F_LABEL] } }, 
     { 0|A(PCREL_ADDR), { (1<<MACH_BASE) } }  },
+/* label32: 16 bit absolute address */
+  { "label32", BSP_OPERAND_LABEL32, HW_H_UINT, 7, 8,
+    { 0, { (const PTR) &bsp_cgen_ifld_table[BSP_F_LABEL32] } }, 
+    { 0|A(ABS_ADDR), { (1<<MACH_BASE) } }  },
 /* sentinel */
   { 0, 0, 0, 0, 0,
     { 0, { (const PTR) 0 } },
@@ -658,6 +663,11 @@ static const CGEN_IBASE bsp_cgen_insn_table[MAX_INSNS] =
 /* bytealign */
   {
     BSP_INSN_BYTEALIGN, "bytealign", "bytealign", 16,
+    { 0, { (1<<MACH_BASE) } }
+  },
+/* la $imm */
+  {
+    BSP_INSN_LA, "la", "la", 32,
     { 0, { (1<<MACH_BASE) } }
   },
 };

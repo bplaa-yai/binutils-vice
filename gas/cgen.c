@@ -601,7 +601,8 @@ gas_cgen_md_apply_fix3 (fixP, valP, seg)
       if (fixP->fx_done
 	  /* FIXME: If partial_inplace isn't set bfd_install_relocation won't
 	     finish the job.  Testing for pcrel is a temporary hack.  */
-	  || fixP->fx_pcrel)
+	  || fixP->fx_pcrel
+    || (fixP->fx_r_type == BFD_RELOC_BSP_LABEL32 + opindex + 1))
 	{
 	  CGEN_CPU_SET_FIELDS_BITSIZE (cd) (fields, CGEN_INSN_BITSIZE (insn));
 	  CGEN_CPU_SET_VMA_OPERAND (cd) (cd, opindex, fields, (bfd_vma) value);
